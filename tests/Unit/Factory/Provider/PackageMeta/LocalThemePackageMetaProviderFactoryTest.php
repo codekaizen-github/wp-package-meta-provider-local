@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Provider\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta\LocalThemePackageMetaProviderFactory;
+use CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta\ThemePackageMetaProviderFactory;
 use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @since 1.0.0
  */
-class LocalThemePackageMetaProviderFactoryTest extends TestCase {
+class ThemePackageMetaProviderFactoryTest extends TestCase {
 
 	/**
 	 * Tests factory creates a provider that correctly extracts name from the Fabled Sunset theme.
@@ -28,7 +28,7 @@ class LocalThemePackageMetaProviderFactoryTest extends TestCase {
 	 */
 	public function testThemePackageMetaFabledSunsetThemeGetName(): void {
 		$filePath = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		$factory  = new LocalThemePackageMetaProviderFactory( $filePath );
+		$factory  = new ThemePackageMetaProviderFactory( $filePath );
 		$provider = $factory->create();
 		$this->assertEquals( 'Fabled Sunset', $provider->getName() );
 	}
