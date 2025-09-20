@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Accessor;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;

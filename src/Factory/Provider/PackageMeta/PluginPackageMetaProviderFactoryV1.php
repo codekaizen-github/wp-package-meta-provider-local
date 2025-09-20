@@ -10,8 +10,8 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaProviderFactoryContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersAccessor;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentAccessor;
+use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
+use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
