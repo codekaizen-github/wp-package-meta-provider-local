@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Reader;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Accessor;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;
 use InvalidArgumentException;
