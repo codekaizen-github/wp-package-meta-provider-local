@@ -8,9 +8,9 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHubTests\Unit\Validator\Rule\Version;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\Version;
 
-use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\Version\FlexibleSemanticVersionRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\Version\FlexibleSemanticVersionRule;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Validator;
 

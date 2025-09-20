@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\Version;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\Version;
 
 use Respect\Validation\Rules\Core\Simple;
 

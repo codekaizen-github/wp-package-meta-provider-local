@@ -6,13 +6,13 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHub\Factory\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaProviderFactoryContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentAccessor;
-use CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta\PluginPackageMetaProvider;
+use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 

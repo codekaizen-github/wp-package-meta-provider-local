@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Reader;
 
-use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\StringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;
 use InvalidArgumentException;
 
 /**

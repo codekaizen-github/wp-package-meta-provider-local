@@ -5,7 +5,7 @@
  * @package CodeKaizen\WPPackageMetaProviderLocal
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor;
 
 interface StringAccessorContract {
 	/**

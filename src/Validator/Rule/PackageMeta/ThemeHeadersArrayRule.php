@@ -8,9 +8,9 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\Version\FlexibleSemanticVersionRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\Version\FlexibleSemanticVersionRule;
 use Respect\Validation\Validator;
 use Respect\Validation\Rules;
 use Respect\Validation\Rules\Core\Simple;

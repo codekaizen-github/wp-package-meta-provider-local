@@ -8,9 +8,9 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHubTests\Unit\Validator\Rule\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Validator;
 
@@ -28,25 +28,20 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 */
 	public function testValidCaseKitchenSink(): void {
 		$input   = [
-			'name'                     => 'Test Theme',
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
@@ -58,25 +53,20 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 */
 	public function testValidCaseKitchenSinkWithNonFullSemverRequiresPHP(): void {
 		$input   = [
-			'name'                     => 'Test Theme',
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
@@ -88,7 +78,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 */
 	public function testValidCaseNameOnly(): void {
 		$input   = [
-			'name' => 'Test Theme',
+			'Name' => 'Test Theme',
 		];
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
@@ -98,27 +88,22 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testInvalidCaseViewURLIsNotAURL(): void {
+	public function testInvalidCaseThemeURIIsNotAURI(): void {
 		$input   = [
-			'name'                     => 'Test Theme',
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'not_a_url',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'not_a_uri',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
@@ -130,25 +115,20 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 */
 	public function testInvalidCaseVersionIsNotAVersion(): void {
 		$input   = [
-			'name'                     => 'Test Theme',
-			'version'                  => 'three',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => 'main',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
@@ -160,24 +140,19 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 	 */
 	public function testInvalidCaseNameIsNull(): void {
 		$input = [
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		// Testing without using check() to avoid exception handling.
 		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );

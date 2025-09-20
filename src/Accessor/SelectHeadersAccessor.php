@@ -10,8 +10,8 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
-use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\StringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;
 use UnexpectedValueException;
 
 /**

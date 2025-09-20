@@ -8,12 +8,12 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
-use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 
 /**
  * Provider for local WordPress plugin package metadata.
