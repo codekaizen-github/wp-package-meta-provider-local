@@ -8,14 +8,12 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\FileContentReaderContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersPackageMetaParser;
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
-use InvalidArgumentException;
+use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 
 /**
  * Provider for local WordPress theme package metadata.
@@ -25,30 +23,22 @@ use InvalidArgumentException;
  * @since 1.0.0
  */
 class ThemePackageMetaProvider implements ThemePackageMetaContract {
-
 	/**
-	 * Path to the theme file.
+	 * HTTP client.
 	 *
-	 * @var string
+	 * @var AssociativeArrayStringToStringAccessorContract
 	 */
-	protected string $filePath;
+	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
-	 * File content reader instance.
-	 *
-	 * @var FileContentReaderContract
-	 */
-	protected FileContentReaderContract $reader;
-
-	/**
-	 * Full theme slug including directory prefix and file extension.
+	 * Full plugin slug including directory prefix and file extension.
 	 *
 	 * @var string
 	 */
 	protected string $fullSlug;
 
 	/**
-	 * Short theme slug without directory prefix or file extension.
+	 * Short plugin slug without directory prefix or file extension.
 	 *
 	 * @var string
 	 */
@@ -57,183 +47,272 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	/**
 	 * Cached package metadata.
 	 *
-	 * @var ?array<string,string>
+	 * @var ?array<string,mixed>
 	 */
 	protected ?array $packageMeta;
-		/**
-		 * Constructor.
-		 *
-		 * @param string                    $filePath Path to the style.css file.
-		 * @param FileContentReaderContract $reader File content reader instance.
-		 * @throws InvalidArgumentException If the file path is invalid.
-		 */
-	public function __construct( string $filePath, FileContentReaderContract $reader ) {
-		if ( ! file_exists( $filePath ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- This is an exception message that is not displayed to end users.
-			throw new InvalidArgumentException( "Invalid file path: $filePath" );
-		}
-		$this->filePath    = $filePath;
-		$this->reader      = $reader;
-		$basename          = basename( $filePath );
-		$directory         = dirname( $filePath );
-		$directoryBasename = pathinfo( $directory, PATHINFO_BASENAME );
-		// Includes any .php extension.
-		$this->fullSlug = $directoryBasename . '/' . $basename;
-		// Remove extension (if any) to get just the filename.
-		$this->shortSlug   = pathinfo( $basename, PATHINFO_FILENAME );
+	/**
+	 * Constructor.
+	 *
+	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
+	 */
+	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
+
+		$this->client      = $client;
 		$this->packageMeta = null;
 	}
 	/**
-	 * Gets the name of the theme.
+	 * Gets the name of the plugin.
 	 *
-	 * @return string The theme name.
+	 * @return string The plugin name.
 	 */
 	public function getName(): string {
-		return $this->getPackageMeta()['Name'];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var string $value
+		 */
+		$value = $this->getPackageMeta()['name'];
+		return $value;
 	}
 	/**
-	 * Gets the full slug, including any directory prefix and file extension.
+	 * Full slug, including any directory prefix and any file extension like .php - may contain a "/".
 	 *
-	 * @return string The full slug.
+	 * @return string
 	 */
 	public function getFullSlug(): string {
 		return $this->fullSlug;
 	}
 	/**
-	 * Gets the short slug, minus any prefix. Should not contain a "/".
+	 * Slug minus any prefix. Should not contain a "/".
 	 *
-	 * @return string The short slug.
+	 * @return string
 	 */
 	public function getShortSlug(): string {
 		return $this->shortSlug;
 	}
 	/**
-	 * Gets the version of the theme.
+	 * Gets the plugin URI.
 	 *
-	 * @return ?string The theme version or null if not available.
-	 */
-	public function getVersion(): ?string {
-		return $this->getPackageMeta()['Version'] ?? null;
-	}
-	/**
-	 * Gets the theme URI.
-	 *
-	 * @return ?string The theme URI or null if not available.
+	 * @return ?string The plugin URI or null if not available.
 	 */
 	public function getViewURL(): ?string {
-		return $this->getPackageMeta()['ThemeURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['viewUrl'];
+		return $value;
 	}
 	/**
-	 * Gets the download URL for the theme.
+	 * Gets the version of the plugin.
 	 *
-	 * @return ?string The theme download URL or null if not available.
+	 * @return ?string The plugin version or null if not available.
+	 */
+	public function getVersion(): ?string {
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['version'];
+		return $value;
+	}
+	/**
+	 * Gets the download URL for the plugin.
+	 *
+	 * @return ?string The plugin download URL or null if not available.
 	 */
 	public function getDownloadURL(): ?string {
-		return $this->getPackageMeta()['UpdateURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['downloadUrl'];
+		return $value;
 	}
 	/**
-	 * Gets the WordPress version the theme has been tested with.
+	 * Gets the WordPress version the plugin has been tested with.
 	 *
 	 * @return ?string Tested WordPress version or null if not available.
 	 */
 	public function getTested(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['tested'];
+		return $value;
 	}
 	/**
-	 * Gets the stable version of the theme.
+	 * Gets the stable version of the plugin.
 	 *
 	 * @return ?string The stable version or null if not available.
 	 */
 	public function getStable(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['stable'];
+		return $value;
 	}
 	/**
-	 * Gets the theme tags.
+	 * Gets the plugin tags.
 	 *
-	 * @return string[] Array of theme tags.
+	 * @return string[] Array of plugin tags.
 	 */
 	public function getTags(): array {
-		return [];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var string[] $value
+		 */
+		$value = $this->getPackageMeta()['tags'];
+		return $value;
 	}
 	/**
-	 * Gets the theme author.
+	 * Gets the plugin author.
 	 *
-	 * @return ?string The theme author or null if not available.
+	 * @return ?string The plugin author or null if not available.
 	 */
 	public function getAuthor(): ?string {
-		return $this->getPackageMeta()['Author'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['author'];
+		return $value;
 	}
 	/**
-	 * Gets the theme author's URL.
+	 * Gets the plugin author's URL.
 	 *
-	 * @return ?string The theme author's URL or null if not available.
+	 * @return ?string The plugin author's URL or null if not available.
 	 */
 	public function getAuthorURL(): ?string {
-		return $this->getPackageMeta()['AuthorURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['authorUrl'];
+		return $value;
 	}
 	/**
-	 * Gets the theme license.
+	 * Gets the plugin license.
 	 *
-	 * @return ?string The theme license or null if not available.
+	 * @return ?string The plugin license or null if not available.
 	 */
 	public function getLicense(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['license'];
+		return $value;
 	}
 	/**
-	 * Gets the theme license URL.
+	 * Gets the plugin license URL.
 	 *
-	 * @return ?string The theme license URL or null if not available.
+	 * @return ?string The plugin license URL or null if not available.
 	 */
 	public function getLicenseURL(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['licenseUrl'];
+		return $value;
 	}
 	/**
-	 * Gets the short description of the theme.
+	 * Gets the short description of the plugin.
 	 *
-	 * @return ?string The theme short description or null if not available.
+	 * @return ?string The plugin short description or null if not available.
 	 */
 	public function getShortDescription(): ?string {
-		return $this->getPackageMeta()['Description'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['shortDescription'];
+		return $value;
 	}
 	/**
-	 * Gets the full description of the theme.
+	 * Gets the full description of the plugin.
 	 *
-	 * @return ?string The theme full description or null if not available.
+	 * @return ?string The plugin full description or null if not available.
 	 */
 	public function getDescription(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string$value
+		 */
+		$value = $this->getPackageMeta()['description'];
+		return $value;
 	}
 	/**
-	 * Gets the minimum WordPress version required by the theme.
+	 * Gets the minimum WordPress version required by the plugin.
 	 *
 	 * @return ?string The required WordPress version or null if not specified.
 	 */
 	public function getRequiresWordPressVersion(): ?string {
-		return $this->getPackageMeta()['RequiresWP'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['requiresWordPressVersion'];
+		return $value;
 	}
 	/**
-	 * Gets the minimum PHP version required by the theme.
+	 * Gets the minimum PHP version required by the plugin.
 	 *
 	 * @return ?string The required PHP version or null if not specified.
 	 */
 	public function getRequiresPHPVersion(): ?string {
-		return $this->getPackageMeta()['RequiresPHP'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['requiresPHPVersion'];
+		return $value;
 	}
 	/**
-	 * Gets the text domain used by the theme for internationalization.
+	 * Gets the text domain used by the plugin for internationalization.
 	 *
 	 * @return ?string The text domain or null if not specified.
 	 */
 	public function getTextDomain(): ?string {
-		return $this->getPackageMeta()['TextDomain'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['textDomain'];
+		return $value;
 	}
 	/**
-	 * Gets the domain path for the theme's translation files.
+	 * Gets the domain path for the plugin's translation files.
 	 *
 	 * @return ?string The domain path or null if not specified.
 	 */
 	public function getDomainPath(): ?string {
-		return $this->getPackageMeta()['DomainPath'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['domainPath'];
+		return $value;
 	}
 	/**
 	 * Gets the template for the theme.
@@ -241,7 +320,13 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @return ?string The template or null if not specified.
 	 */
 	public function getTemplate(): ?string {
-		return $this->getPackageMeta()['Template'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['template'];
+		return $value;
 	}
 	/**
 	 * Gets the status for the theme.
@@ -249,7 +334,13 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @return ?string The status or null if not specified.
 	 */
 	public function getStatus(): ?string {
-		return $this->getPackageMeta()['Status'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['status'];
+		return $value;
 	}
 	/**
 	 * Gets the theme package metadata.
@@ -257,32 +348,19 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * Parses theme file headers to extract metadata using a SelectHeadersPackageMetaParser.
 	 * Result is cached for subsequent calls.
 	 *
-	 * @return array<string,string> Associative array of theme metadata.
+	 * @return array<string,mixed> Associative array of theme metadata.
 	 */
 	protected function getPackageMeta(): array {
 		if ( null !== $this->packageMeta ) {
 			return $this->packageMeta;
 		}
-		$parser    = new SelectHeadersPackageMetaParser(
-			array(
-				'Name'        => 'Theme Name',
-				'ThemeURI'    => 'Theme URI',
-				'Description' => 'Description',
-				'Author'      => 'Author',
-				'AuthorURI'   => 'Author URI',
-				'Version'     => 'Version',
-				'Template'    => 'Template',
-				'Status'      => 'Status',
-				'Tags'        => 'Tags',
-				'TextDomain'  => 'Text Domain',
-				'DomainPath'  => 'Domain Path',
-				'RequiresWP'  => 'Requires at least',
-				'RequiresPHP' => 'Requires PHP',
-				'UpdateURI'   => 'Update URI',
-			)
-		);
-		$metaArray = $parser->parse( $this->reader->read( $this->filePath ) );
+		$metaArray = $this->client->get();
 		Validator::create( new ThemeHeadersArrayRule() )->check( $metaArray );
+		/**
+		 * Meta array will have been validated.
+		 *
+		 * @var array<string,mixed> $metaArray
+		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
 	}

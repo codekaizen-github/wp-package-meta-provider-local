@@ -8,11 +8,11 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderORASHubTests\Unit\Provider\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentReader;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
+use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
+use CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta\ThemePackageMetaProvider;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,14 +23,35 @@ use PHPUnit\Framework\TestCase;
 class ThemePackageMetaProviderTest extends TestCase {
 
 	/**
-	 * Tests getName() extracts the correct theme name from the Fabled Sunset theme.
+	 * Tests getName() extracts the correct plugin name from the My Basics plugin.
 	 *
 	 * @return void
 	 */
 	public function testGetNameFromThemeFabledSunset(): void {
-		$filePath = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		$reader   = new FileContentReader();
-		$provider = new ThemePackageMetaProvider( $filePath, $reader );
-		$this->assertEquals( 'Fabled Sunset', $provider->getName() );
+		$response                  = [
+			'name'                     => 'Test Theme',
+			'version'                  => '3.0.1',
+			'viewUrl'                  => 'https://codekaizen.net',
+			'downloadUrl'              => 'https://codekaizen.net',
+			'tested'                   => '6.8.2',
+			'stable'                   => '6.8.2',
+			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
+			'author'                   => 'Andrew Dawes',
+			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
+			'license'                  => 'GPL v2 or later',
+			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
+			'description'              => 'This is a test theme',
+			'shortDescription'         => 'Test',
+			'requiresWordPressVersion' => '6.8.2',
+			'requiresPHPVersion'       => '8.2.1',
+			'textDomain'               => 'test-plugin',
+			'domainPath'               => '/languages',
+			'template'                 => 'parent-theme',
+			'status'                   => 'publish',
+		];
+		$metaAnnotationKeyAccessor = Mockery::mock( AssociativeArrayStringToMixedAccessorContract::class );
+		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new ThemePackageMetaProvider( $metaAnnotationKeyAccessor );
+		$this->assertEquals( 'Test Theme', $provider->getName() );
 	}
 }

@@ -8,11 +8,11 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderORASHubTests\Unit\Provider\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentReader;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
+use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
+use CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta\PluginPackageMetaProvider;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,9 +28,34 @@ class PluginPackageMetaProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetNameFromPluginMyBasicsPlugin(): void {
-		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentReader();
-		$provider = new PluginPackageMetaProvider( $filePath, $reader );
-		$this->assertEquals( 'My Basics Plugin', $provider->getName() );
+		$response                  = [
+			'name'                     => 'Test Plugin',
+			'version'                  => '3.0.1',
+			'viewUrl'                  => 'https://codekaizen.net',
+			'downloadUrl'              => 'https://codekaizen.net',
+			'tested'                   => '6.8.2',
+			'stable'                   => '6.8.2',
+			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
+			'author'                   => 'Andrew Dawes',
+			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
+			'license'                  => 'GPL v2 or later',
+			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
+			'description'              => 'This is a test plugin',
+			'shortDescription'         => 'Test',
+			'requiresWordPressVersion' => '6.8.2',
+			'requiresPHPVersion'       => '8.2.1',
+			'textDomain'               => 'test-plugin',
+			'domainPath'               => '/languages',
+			'requiresPlugins'          => [ 'akismet', 'hello-dolly' ],
+			'sections'                 => [
+				'changelog' => 'changed',
+				'about'     => 'this is a plugin about section',
+			],
+			'network'                  => true,
+		];
+		$metaAnnotationKeyAccessor = Mockery::mock( AssociativeArrayStringToMixedAccessorContract::class );
+		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new PluginPackageMetaProvider( $metaAnnotationKeyAccessor );
+		$this->assertEquals( 'Test Plugin', $provider->getName() );
 	}
 }

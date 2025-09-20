@@ -8,14 +8,12 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderORASHub\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\FileContentReaderContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersPackageMetaParser;
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
-use InvalidArgumentException;
+use CodeKaizen\WPPackageMetaProviderORASHub\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderORASHub\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 
 /**
  * Provider for local WordPress plugin package metadata.
@@ -27,18 +25,11 @@ use InvalidArgumentException;
 class PluginPackageMetaProvider implements PluginPackageMetaContract {
 
 	/**
-	 * Path to the plugin file.
+	 * HTTP client.
 	 *
-	 * @var string
+	 * @var AssociativeArrayStringToStringAccessorContract
 	 */
-	protected string $filePath;
-
-	/**
-	 * File content reader instance.
-	 *
-	 * @var FileContentReaderContract
-	 */
-	protected FileContentReaderContract $reader;
+	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
 	 * Full plugin slug including directory prefix and file extension.
@@ -57,30 +48,16 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	/**
 	 * Cached package metadata.
 	 *
-	 * @var ?array<string,string>
+	 * @var ?array<string,mixed>
 	 */
 	protected ?array $packageMeta;
 	/**
 	 * Constructor.
 	 *
-	 * @param string                    $filePath Path to the plugin file.
-	 * @param FileContentReaderContract $reader File content reader instance.
-	 * @throws InvalidArgumentException If the file path is invalid.
+	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
 	 */
-	public function __construct( string $filePath, FileContentReaderContract $reader ) {
-		if ( ! file_exists( $filePath ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- This is an exception message that is not displayed to end users
-			throw new InvalidArgumentException( 'Invalid file path: ' . $filePath );
-		}
-		$this->filePath    = $filePath;
-		$this->reader      = $reader;
-		$basename          = basename( $filePath );
-		$directory         = dirname( $filePath );
-		$directoryBasename = pathinfo( $directory, PATHINFO_BASENAME );
-		// Includes any .php extension.
-		$this->fullSlug = $directoryBasename . '/' . $basename;
-		// Remove extension (if any) to get just the filename.
-		$this->shortSlug   = pathinfo( $basename, PATHINFO_FILENAME );
+	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
+		$this->client      = $client;
 		$this->packageMeta = null;
 	}
 	/**
@@ -89,7 +66,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string The plugin name.
 	 */
 	public function getName(): string {
-		return $this->getPackageMeta()['Name'];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var string $value
+		 */
+		$value = $this->getPackageMeta()['name'];
+		return $value;
 	}
 	/**
 	 * Full slug, including any directory prefix and any file extension like .php - may contain a "/".
@@ -108,20 +91,32 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 		return $this->shortSlug;
 	}
 	/**
-	 * Gets the version of the plugin.
-	 *
-	 * @return ?string The plugin version or null if not available.
-	 */
-	public function getVersion(): ?string {
-		return $this->getPackageMeta()['Version'] ?? null;
-	}
-	/**
 	 * Gets the plugin URI.
 	 *
 	 * @return ?string The plugin URI or null if not available.
 	 */
 	public function getViewURL(): ?string {
-		return $this->getPackageMeta()['PluginURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['viewUrl'];
+		return $value;
+	}
+	/**
+	 * Gets the version of the plugin.
+	 *
+	 * @return ?string The plugin version or null if not available.
+	 */
+	public function getVersion(): ?string {
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['version'];
+		return $value;
 	}
 	/**
 	 * Gets the download URL for the plugin.
@@ -129,7 +124,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin download URL or null if not available.
 	 */
 	public function getDownloadURL(): ?string {
-		return $this->getPackageMeta()['UpdateURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['downloadUrl'];
+		return $value;
 	}
 	/**
 	 * Gets the WordPress version the plugin has been tested with.
@@ -137,7 +138,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string Tested WordPress version or null if not available.
 	 */
 	public function getTested(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['tested'];
+		return $value;
 	}
 	/**
 	 * Gets the stable version of the plugin.
@@ -145,7 +152,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The stable version or null if not available.
 	 */
 	public function getStable(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['stable'];
+		return $value;
 	}
 	/**
 	 * Gets the plugin tags.
@@ -153,7 +166,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string[] Array of plugin tags.
 	 */
 	public function getTags(): array {
-		return [];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var string[] $value
+		 */
+		$value = $this->getPackageMeta()['tags'];
+		return $value;
 	}
 	/**
 	 * Gets the plugin author.
@@ -161,7 +180,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin author or null if not available.
 	 */
 	public function getAuthor(): ?string {
-		return $this->getPackageMeta()['Author'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['author'];
+		return $value;
 	}
 	/**
 	 * Gets the plugin author's URL.
@@ -169,7 +194,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin author's URL or null if not available.
 	 */
 	public function getAuthorURL(): ?string {
-		return $this->getPackageMeta()['AuthorURI'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['authorUrl'];
+		return $value;
 	}
 	/**
 	 * Gets the plugin license.
@@ -177,7 +208,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin license or null if not available.
 	 */
 	public function getLicense(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['license'];
+		return $value;
 	}
 	/**
 	 * Gets the plugin license URL.
@@ -185,7 +222,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin license URL or null if not available.
 	 */
 	public function getLicenseURL(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['licenseUrl'];
+		return $value;
 	}
 	/**
 	 * Gets the short description of the plugin.
@@ -193,7 +236,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin short description or null if not available.
 	 */
 	public function getShortDescription(): ?string {
-		return $this->getPackageMeta()['Description'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['shortDescription'];
+		return $value;
 	}
 	/**
 	 * Gets the full description of the plugin.
@@ -201,7 +250,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The plugin full description or null if not available.
 	 */
 	public function getDescription(): ?string {
-		return null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string$value
+		 */
+		$value = $this->getPackageMeta()['description'];
+		return $value;
 	}
 	/**
 	 * Gets the minimum WordPress version required by the plugin.
@@ -209,7 +264,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The required WordPress version or null if not specified.
 	 */
 	public function getRequiresWordPressVersion(): ?string {
-		return $this->getPackageMeta()['RequiresWP'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['requiresWordPressVersion'];
+		return $value;
 	}
 	/**
 	 * Gets the minimum PHP version required by the plugin.
@@ -217,7 +278,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The required PHP version or null if not specified.
 	 */
 	public function getRequiresPHPVersion(): ?string {
-		return $this->getPackageMeta()['RequiresPHP'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['requiresPHPVersion'];
+		return $value;
 	}
 	/**
 	 * Gets the text domain used by the plugin for internationalization.
@@ -225,7 +292,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The text domain or null if not specified.
 	 */
 	public function getTextDomain(): ?string {
-		return $this->getPackageMeta()['TextDomain'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['textDomain'];
+		return $value;
 	}
 	/**
 	 * Gets the domain path for the plugin's translation files.
@@ -233,7 +306,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return ?string The domain path or null if not specified.
 	 */
 	public function getDomainPath(): ?string {
-		return $this->getPackageMeta()['DomainPath'] ?? null;
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?string $value
+		 */
+		$value = $this->getPackageMeta()['domainPath'];
+		return $value;
 	}
 	/**
 	 * Gets the list of plugins that this plugin requires.
@@ -241,10 +320,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string[] Array of required plugin identifiers.
 	 */
 	public function getRequiresPlugins(): array {
-		$meta = $this->getPackageMeta();
-		return isset( $meta['RequiresPlugins'] )
-			? array_map( 'trim', explode( ',', $meta['RequiresPlugins'] ) )
-			: [];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var string[] $value
+		 */
+		$value = $this->getPackageMeta()['requiresPlugins'];
+		return $value;
 	}
 	/**
 	 * Gets the sections of the plugin description.
@@ -252,7 +334,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return array<string,string> Associative array of section names and their content.
 	 */
 	public function getSections(): array {
-		return [];
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var array<string,string> $value
+		 */
+		$value = $this->getPackageMeta()['sections'];
+		return $value;
 	}
 	/**
 	 * Determines if this plugin is a network-only plugin.
@@ -260,42 +348,33 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return boolean True if this is a network plugin, false otherwise.
 	 */
 	public function getNetwork(): bool {
-		return (bool) ( $this->getPackageMeta()['Network'] ?? false );
+		/**
+		 * Value will have been validated.
+		 *
+		 * @var ?bool $value
+		 */
+		$value = $this->getPackageMeta()['Network'];
+		return (bool) $value;
 	}
-
 	/**
 	 * Gets the plugin package metadata.
 	 *
 	 * Parses plugin file headers to extract metadata using a SelectHeadersPackageMetaParser.
 	 * Result is cached for subsequent calls.
 	 *
-	 * @return array<string,string> Associative array of plugin metadata.
+	 * @return array<string,mixed> Associative array of plugin metadata.
 	 */
 	protected function getPackageMeta(): array {
 		if ( null !== $this->packageMeta ) {
 			return $this->packageMeta;
 		}
-		$parser = new SelectHeadersPackageMetaParser(
-			array(
-				'Name'            => 'Plugin Name',
-				'PluginURI'       => 'Plugin URI',
-				'Version'         => 'Version',
-				'Description'     => 'Description',
-				'Author'          => 'Author',
-				'AuthorURI'       => 'Author URI',
-				'TextDomain'      => 'Text Domain',
-				'DomainPath'      => 'Domain Path',
-				'Network'         => 'Network',
-				'RequiresWP'      => 'Requires at least',
-				'RequiresPHP'     => 'Requires PHP',
-				'UpdateURI'       => 'Update URI',
-				'RequiresPlugins' => 'Requires Plugins',
-				// Site Wide Only is deprecated in favor of Network.
-				// '_sitewide'       => 'Site Wide Only', // deprecated.
-			)
-		);
-		$metaArray = $parser->parse( $this->reader->read( $this->filePath ) );
+		$metaArray = $this->client->get();
 		Validator::create( new PluginHeadersArrayRule() )->check( $metaArray );
+		/**
+		 * Meta array will have been validated.
+		 *
+		 * @var array<string,mixed> $metaArray
+		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
 	}
