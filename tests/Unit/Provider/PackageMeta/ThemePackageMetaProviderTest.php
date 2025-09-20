@@ -10,9 +10,10 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentReader;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,14 +24,30 @@ use PHPUnit\Framework\TestCase;
 class ThemePackageMetaProviderTest extends TestCase {
 
 	/**
-	 * Tests getName() extracts the correct theme name from the Fabled Sunset theme.
+	 * Tests getName() extracts the correct plugin name from the My Basics plugin.
 	 *
 	 * @return void
 	 */
 	public function testGetNameFromThemeFabledSunset(): void {
-		$filePath = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		$reader   = new FileContentReader();
-		$provider = new ThemePackageMetaProvider( $filePath, $reader );
-		$this->assertEquals( 'Fabled Sunset', $provider->getName() );
+		$response = [
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+		];
+		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new ThemePackageMetaProvider( $client );
+		$this->assertEquals( 'Test Theme', $provider->getName() );
 	}
 }

@@ -38,7 +38,6 @@ class ThemeHeadersArrayRule extends Simple {
 		if ( ! is_array( $input ) ) {
 			return false;
 		}
-
 		return Validator::create(
 			new Rules\AllOf(
 				new Rules\Key( 'Name', new Rules\StringType(), true ),

@@ -12,10 +12,8 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\FileContentReaderContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersPackageMetaParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
-use InvalidArgumentException;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 
 /**
  * Provider for local WordPress theme package metadata.
@@ -25,30 +23,22 @@ use InvalidArgumentException;
  * @since 1.0.0
  */
 class ThemePackageMetaProvider implements ThemePackageMetaContract {
-
 	/**
-	 * Path to the theme file.
+	 * HTTP client.
 	 *
-	 * @var string
+	 * @var AssociativeArrayStringToStringAccessorContract
 	 */
-	protected string $filePath;
+	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
-	 * File content reader instance.
-	 *
-	 * @var FileContentReaderContract
-	 */
-	protected FileContentReaderContract $reader;
-
-	/**
-	 * Full theme slug including directory prefix and file extension.
+	 * Full plugin slug including directory prefix and file extension.
 	 *
 	 * @var string
 	 */
 	protected string $fullSlug;
 
 	/**
-	 * Short theme slug without directory prefix or file extension.
+	 * Short plugin slug without directory prefix or file extension.
 	 *
 	 * @var string
 	 */
@@ -60,27 +50,14 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @var ?array<string,string>
 	 */
 	protected ?array $packageMeta;
-		/**
-		 * Constructor.
-		 *
-		 * @param string                    $filePath Path to the style.css file.
-		 * @param FileContentReaderContract $reader File content reader instance.
-		 * @throws InvalidArgumentException If the file path is invalid.
-		 */
-	public function __construct( string $filePath, FileContentReaderContract $reader ) {
-		if ( ! file_exists( $filePath ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- This is an exception message that is not displayed to end users.
-			throw new InvalidArgumentException( "Invalid file path: $filePath" );
-		}
-		$this->filePath    = $filePath;
-		$this->reader      = $reader;
-		$basename          = basename( $filePath );
-		$directory         = dirname( $filePath );
-		$directoryBasename = pathinfo( $directory, PATHINFO_BASENAME );
-		// Includes any .php extension.
-		$this->fullSlug = $directoryBasename . '/' . $basename;
-		// Remove extension (if any) to get just the filename.
-		$this->shortSlug   = pathinfo( $basename, PATHINFO_FILENAME );
+	/**
+	 * Constructor.
+	 *
+	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
+	 */
+	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
+
+		$this->client      = $client;
 		$this->packageMeta = null;
 	}
 	/**
@@ -263,26 +240,13 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 		if ( null !== $this->packageMeta ) {
 			return $this->packageMeta;
 		}
-		$parser    = new SelectHeadersPackageMetaParser(
-			array(
-				'Name'        => 'Theme Name',
-				'ThemeURI'    => 'Theme URI',
-				'Description' => 'Description',
-				'Author'      => 'Author',
-				'AuthorURI'   => 'Author URI',
-				'Version'     => 'Version',
-				'Template'    => 'Template',
-				'Status'      => 'Status',
-				'Tags'        => 'Tags',
-				'TextDomain'  => 'Text Domain',
-				'DomainPath'  => 'Domain Path',
-				'RequiresWP'  => 'Requires at least',
-				'RequiresPHP' => 'Requires PHP',
-				'UpdateURI'   => 'Update URI',
-			)
-		);
-		$metaArray = $parser->parse( $this->reader->read( $this->filePath ) );
+		$metaArray = $this->client->get();
 		Validator::create( new ThemeHeadersArrayRule() )->check( $metaArray );
+		/**
+		 * Meta array will have been validated.
+		 *
+		 * @var array<string,string> $metaArray
+		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
 	}

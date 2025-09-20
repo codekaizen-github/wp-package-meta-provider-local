@@ -12,10 +12,8 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\FileContentReaderContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersPackageMetaParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
-use InvalidArgumentException;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 
 /**
  * Provider for local WordPress plugin package metadata.
@@ -27,18 +25,11 @@ use InvalidArgumentException;
 class PluginPackageMetaProvider implements PluginPackageMetaContract {
 
 	/**
-	 * Path to the plugin file.
+	 * HTTP client.
 	 *
-	 * @var string
+	 * @var AssociativeArrayStringToStringAccessorContract
 	 */
-	protected string $filePath;
-
-	/**
-	 * File content reader instance.
-	 *
-	 * @var FileContentReaderContract
-	 */
-	protected FileContentReaderContract $reader;
+	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
 	 * Full plugin slug including directory prefix and file extension.
@@ -63,24 +54,10 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	/**
 	 * Constructor.
 	 *
-	 * @param string                    $filePath Path to the plugin file.
-	 * @param FileContentReaderContract $reader File content reader instance.
-	 * @throws InvalidArgumentException If the file path is invalid.
+	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
 	 */
-	public function __construct( string $filePath, FileContentReaderContract $reader ) {
-		if ( ! file_exists( $filePath ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- This is an exception message that is not displayed to end users
-			throw new InvalidArgumentException( 'Invalid file path: ' . $filePath );
-		}
-		$this->filePath    = $filePath;
-		$this->reader      = $reader;
-		$basename          = basename( $filePath );
-		$directory         = dirname( $filePath );
-		$directoryBasename = pathinfo( $directory, PATHINFO_BASENAME );
-		// Includes any .php extension.
-		$this->fullSlug = $directoryBasename . '/' . $basename;
-		// Remove extension (if any) to get just the filename.
-		$this->shortSlug   = pathinfo( $basename, PATHINFO_FILENAME );
+	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
+		$this->client      = $client;
 		$this->packageMeta = null;
 	}
 	/**
@@ -262,7 +239,6 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	public function getNetwork(): bool {
 		return (bool) ( $this->getPackageMeta()['Network'] ?? false );
 	}
-
 	/**
 	 * Gets the plugin package metadata.
 	 *
@@ -275,27 +251,13 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 		if ( null !== $this->packageMeta ) {
 			return $this->packageMeta;
 		}
-		$parser = new SelectHeadersPackageMetaParser(
-			array(
-				'Name'            => 'Plugin Name',
-				'PluginURI'       => 'Plugin URI',
-				'Version'         => 'Version',
-				'Description'     => 'Description',
-				'Author'          => 'Author',
-				'AuthorURI'       => 'Author URI',
-				'TextDomain'      => 'Text Domain',
-				'DomainPath'      => 'Domain Path',
-				'Network'         => 'Network',
-				'RequiresWP'      => 'Requires at least',
-				'RequiresPHP'     => 'Requires PHP',
-				'UpdateURI'       => 'Update URI',
-				'RequiresPlugins' => 'Requires Plugins',
-				// Site Wide Only is deprecated in favor of Network.
-				// '_sitewide'       => 'Site Wide Only', // deprecated.
-			)
-		);
-		$metaArray = $parser->parse( $this->reader->read( $this->filePath ) );
+		$metaArray = $this->client->get();
 		Validator::create( new PluginHeadersArrayRule() )->check( $metaArray );
+		/**
+		 * Meta array will have been validated.
+		 *
+		 * @var array<string,string> $metaArray
+		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
 	}

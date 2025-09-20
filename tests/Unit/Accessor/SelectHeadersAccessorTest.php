@@ -8,10 +8,10 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Parser;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\PackageMeta\SelectHeadersPackageMetaParser;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentReader;
+use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
+use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
 use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @since 1.0.0
  */
-class SelectHeadersPackageMetaParserTest extends TestCase {
+class SelectHeadersAccessorTest extends TestCase {
 
 	/**
 	 * Tests parsing of standard plugin headers from My Basics plugin file.
@@ -44,9 +44,9 @@ class SelectHeadersPackageMetaParserTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentReader();
-		$parser   = new SelectHeadersPackageMetaParser( $headers );
-		$parsed   = $parser->parse( $reader->read( $filePath ) );
+		$reader   = new FileContentAccessor( $filePath );
+		$parser   = new SelectHeadersAccessor( $reader, $headers );
+		$parsed   = $parser->get();
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'My Basics Plugin', $parsed['Name'] );
 		$this->assertArrayHasKey( 'PluginURI', $parsed );
@@ -73,9 +73,9 @@ class SelectHeadersPackageMetaParserTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentReader();
-		$parser   = new SelectHeadersPackageMetaParser( $headers );
-		$parsed   = $parser->parse( $reader->read( $filePath ) );
+		$reader   = new FileContentAccessor( $filePath );
+		$parser   = new SelectHeadersAccessor( $reader, $headers );
+		$parsed   = $parser->get();
 		$this->assertArrayNotHasKey( 'Name', $parsed );
 	}
 	/**
@@ -102,9 +102,9 @@ class SelectHeadersPackageMetaParserTest extends TestCase {
 			// Legacy header that has been replaced by Network.
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/minimum-headers-plugin.php';
-		$reader   = new FileContentReader();
-		$parser   = new SelectHeadersPackageMetaParser( $headers );
-		$parsed   = $parser->parse( $reader->read( $filePath ) );
+		$reader   = new FileContentAccessor( $filePath );
+		$parser   = new SelectHeadersAccessor( $reader, $headers );
+		$parsed   = $parser->get();
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Minimum Headers Plugin', $parsed['Name'] );
 		$this->assertArrayNotHasKey( 'PluginURI', $parsed );
@@ -131,9 +131,9 @@ class SelectHeadersPackageMetaParserTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/plugin-name.php';
-		$reader   = new FileContentReader();
-		$parser   = new SelectHeadersPackageMetaParser( $headers );
-		$parsed   = $parser->parse( $reader->read( $filePath ) );
+		$reader   = new FileContentAccessor( $filePath );
+		$parser   = new SelectHeadersAccessor( $reader, $headers );
+		$parsed   = $parser->get();
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Plugin Name', $parsed['Name'] );
 	}
@@ -160,9 +160,9 @@ class SelectHeadersPackageMetaParserTest extends TestCase {
 			'UpdateURI'   => 'Update URI',
 		];
 		$filePath = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		$reader   = new FileContentReader();
-		$parser   = new SelectHeadersPackageMetaParser( $headers );
-		$parsed   = $parser->parse( $reader->read( $filePath ) );
+		$reader   = new FileContentAccessor( $filePath );
+		$parser   = new SelectHeadersAccessor( $reader, $headers );
+		$parsed   = $parser->get();
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Fabled Sunset', $parsed['Name'] );
 		$this->assertArrayHasKey( 'ThemeURI', $parsed );

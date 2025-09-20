@@ -10,9 +10,9 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileContentReader;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,9 +28,24 @@ class PluginPackageMetaProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetNameFromPluginMyBasicsPlugin(): void {
-		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentReader();
-		$provider = new PluginPackageMetaProvider( $filePath, $reader );
-		$this->assertEquals( 'My Basics Plugin', $provider->getName() );
+		$response = [
+			'Name'            => 'Test Plugin',
+			'PluginURI'       => 'https://codekaizen.net',
+			'Version'         => '3.0.1',
+			'Description'     => 'This is a test plugin',
+			'Author'          => 'Andrew Dawes',
+			'AuthorURI'       => 'https://codekaizen.net/team/andrew-dawes',
+			'TextDomain'      => 'test-plugin',
+			'DomainPath'      => '/languages',
+			'Network'         => 'true',
+			'RequiresWP'      => '6.8.2',
+			'RequiresPHP'     => '8.2.1',
+			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'RequiresPlugins' => 'akismet,hello-dolly',
+		];
+		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new PluginPackageMetaProvider( $client );
+		$this->assertEquals( 'Test Plugin', $provider->getName() );
 	}
 }
