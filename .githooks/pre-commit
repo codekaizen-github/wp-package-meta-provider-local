@@ -1,5 +1,4 @@
 #!/bin/sh
-exit 0;
 composer analyze;
 composer test;
 composer run fix;

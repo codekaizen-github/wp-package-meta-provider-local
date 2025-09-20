@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -28,34 +28,24 @@ class PluginPackageMetaProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetNameFromPluginMyBasicsPlugin(): void {
-		$response                  = [
-			'name'                     => 'Test Plugin',
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test plugin',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'requiresPlugins'          => [ 'akismet', 'hello-dolly' ],
-			'sections'                 => [
-				'changelog' => 'changed',
-				'about'     => 'this is a plugin about section',
-			],
-			'network'                  => true,
+		$response = [
+			'Name'            => 'Test Plugin',
+			'PluginURI'       => 'https://codekaizen.net',
+			'Version'         => '3.0.1',
+			'Description'     => 'This is a test plugin',
+			'Author'          => 'Andrew Dawes',
+			'AuthorURI'       => 'https://codekaizen.net/team/andrew-dawes',
+			'TextDomain'      => 'test-plugin',
+			'DomainPath'      => '/languages',
+			'Network'         => 'true',
+			'RequiresWP'      => '6.8.2',
+			'RequiresPHP'     => '8.2.1',
+			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
-		$metaAnnotationKeyAccessor = Mockery::mock( AssociativeArrayStringToMixedAccessorContract::class );
-		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
-		$provider = new PluginPackageMetaProvider( $metaAnnotationKeyAccessor );
+		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new PluginPackageMetaProvider( $client );
 		$this->assertEquals( 'Test Plugin', $provider->getName() );
 	}
 }

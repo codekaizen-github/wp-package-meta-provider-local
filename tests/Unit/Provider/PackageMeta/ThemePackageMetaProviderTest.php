@@ -11,6 +11,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -28,30 +29,25 @@ class ThemePackageMetaProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetNameFromThemeFabledSunset(): void {
-		$response                  = [
-			'name'                     => 'Test Theme',
-			'version'                  => '3.0.1',
-			'viewUrl'                  => 'https://codekaizen.net',
-			'downloadUrl'              => 'https://codekaizen.net',
-			'tested'                   => '6.8.2',
-			'stable'                   => '6.8.2',
-			'tags'                     => [ 'tag1', 'tag2', 'tag3' ],
-			'author'                   => 'Andrew Dawes',
-			'authorUrl'                => 'https://codekaizen.net/team/andrew-dawes',
-			'license'                  => 'GPL v2 or later',
-			'licenseUrl'               => 'https://www.gnu.org/licenses/gpl-2.0.html',
-			'description'              => 'This is a test theme',
-			'shortDescription'         => 'Test',
-			'requiresWordPressVersion' => '6.8.2',
-			'requiresPHPVersion'       => '8.2.1',
-			'textDomain'               => 'test-plugin',
-			'domainPath'               => '/languages',
-			'template'                 => 'parent-theme',
-			'status'                   => 'publish',
+		$response = [
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
-		$metaAnnotationKeyAccessor = Mockery::mock( AssociativeArrayStringToMixedAccessorContract::class );
-		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
-		$provider = new ThemePackageMetaProvider( $metaAnnotationKeyAccessor );
+		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$provider = new ThemePackageMetaProvider( $client );
 		$this->assertEquals( 'Test Theme', $provider->getName() );
 	}
 }
