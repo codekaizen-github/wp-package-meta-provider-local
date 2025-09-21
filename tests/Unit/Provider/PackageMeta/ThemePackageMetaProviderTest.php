@@ -12,6 +12,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToMixedAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +48,10 @@ class ThemePackageMetaProviderTest extends TestCase {
 		];
 		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
 		$client->shouldReceive( 'get' )->with()->andReturn( $response );
-		$provider = new ThemePackageMetaProvider( $client );
+		$slugParser = Mockery::mock( SlugParserContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( 'test-theme/style.css' );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( 'test-theme' );
+		$provider = new ThemePackageMetaProvider( $slugParser, $client );
 		$this->assertEquals( 'Test Theme', $provider->getName() );
 	}
 }

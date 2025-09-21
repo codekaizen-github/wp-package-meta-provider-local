@@ -14,6 +14,7 @@ use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 
 /**
  * Provider for local WordPress theme package metadata.
@@ -31,18 +32,12 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
-	 * Full plugin slug including directory prefix and file extension.
+	 * Undocumented variable
 	 *
-	 * @var string
+	 * @var SlugParserContract
 	 */
-	protected string $fullSlug;
+	protected SlugParserContract $slugParser;
 
-	/**
-	 * Short plugin slug without directory prefix or file extension.
-	 *
-	 * @var string
-	 */
-	protected string $shortSlug;
 
 	/**
 	 * Cached package metadata.
@@ -53,10 +48,14 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	/**
 	 * Constructor.
 	 *
+	 * @param SlugParserContract                             $slugParser Slug parser.
 	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
 	 */
-	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
-
+	public function __construct(
+		SlugParserContract $slugParser,
+		AssociativeArrayStringToStringAccessorContract $client
+	) {
+		$this->slugParser  = $slugParser;
 		$this->client      = $client;
 		$this->packageMeta = null;
 	}
@@ -74,7 +73,7 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @return string The full slug.
 	 */
 	public function getFullSlug(): string {
-		return $this->fullSlug;
+		return $this->slugParser->getFullSlug();
 	}
 	/**
 	 * Gets the short slug, minus any prefix. Should not contain a "/".
@@ -82,7 +81,7 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @return string The short slug.
 	 */
 	public function getShortSlug(): string {
-		return $this->shortSlug;
+		return $this->slugParser->getShortSlug();
 	}
 	/**
 	 * Gets the version of the theme.
@@ -249,5 +248,35 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
+	}
+	/**
+	 * Undocumented function
+	 *
+	 * @return mixed
+	 */
+	public function jsonSerialize(): mixed {
+		return [
+			'name'                     => $this->getName(),
+			'fullSlug'                 => $this->getFullSlug(),
+			'shortSlug'                => $this->getShortSlug(),
+			'viewUrl'                  => $this->getViewUrl(),
+			'version'                  => $this->getVersion(),
+			'downloadUrl'              => $this->getDownloadUrl(),
+			'tested'                   => $this->getTested(),
+			'stable'                   => $this->getStable(),
+			'tags'                     => $this->getTags(),
+			'author'                   => $this->getAuthor(),
+			'authorUrl'                => $this->getAuthorUrl(),
+			'license'                  => $this->getLicense(),
+			'licenseUrl'               => $this->getLicenseUrl(),
+			'description'              => $this->getDescription(),
+			'shortDescription'         => $this->getShortDescription(),
+			'requiresWordPressVersion' => $this->getRequiresWordPressVersion(),
+			'requiresPHPVersion'       => $this->getRequiresPHPVersion(),
+			'textDomain'               => $this->getTextDomain(),
+			'domainPath'               => $this->getDomainPath(),
+			'template'                 => $this->getTemplate(),
+			'status'                   => $this->getStatus(),
+		];
 	}
 }

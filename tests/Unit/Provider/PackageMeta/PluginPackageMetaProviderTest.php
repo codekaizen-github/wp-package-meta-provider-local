@@ -11,6 +11,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +46,10 @@ class PluginPackageMetaProviderTest extends TestCase {
 		];
 		$client   = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
 		$client->shouldReceive( 'get' )->with()->andReturn( $response );
-		$provider = new PluginPackageMetaProvider( $client );
+		$slugParser = Mockery::mock( SlugParserContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( 'test-plugin/test-plugin.php' );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( 'test-plugin' );
+		$provider = new PluginPackageMetaProvider( $slugParser, $client );
 		$this->assertEquals( 'Test Plugin', $provider->getName() );
 	}
 }
