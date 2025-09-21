@@ -217,10 +217,9 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string[] Array of required plugin identifiers.
 	 */
 	public function getRequiresPlugins(): array {
-		$meta = $this->getPackageMeta();
-		return isset( $meta['RequiresPlugins'] )
-			? array_map( 'trim', explode( ',', $meta['RequiresPlugins'] ) )
-			: [];
+		$rawTags = $this->getPackageMeta()['RequiresPlugins'];
+		return empty( $this->getPackageMeta()['RequiresPlugins'] )
+			? [] : array_map( 'trim', explode( ',', $rawTags ) );
 	}
 	/**
 	 * Gets the sections of the plugin description.

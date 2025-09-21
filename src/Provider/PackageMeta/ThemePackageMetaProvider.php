@@ -129,7 +129,9 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 	 * @return string[] Array of theme tags.
 	 */
 	public function getTags(): array {
-		return [];
+		$rawValue = $this->getPackageMeta()['Tags'];
+		return empty( $this->getPackageMeta()['Tags'] )
+			? [] : array_map( 'trim', explode( ',', $rawValue ) );
 	}
 	/**
 	 * Gets the theme author.
