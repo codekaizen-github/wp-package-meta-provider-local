@@ -90,4 +90,99 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$this->assertEquals( [], $provider->getTags() );
 		$this->assertEquals( [], $provider->getSections() );
 	}
+	/**
+	 * Test
+	 *
+	 * @return void
+	 */
+	public function testJSONEncodeAndDecode(): void {
+
+		$nameExpected                     = 'Test Plugin';
+		$fullSlugExpected                 = 'test-plugin/test-plugin.php';
+		$shortSlugExpected                = 'test-plugin';
+		$viewURLExpected                  = 'https://codekaizen.net';
+		$versionExpected                  = '3.0.1';
+		$shortDescriptionExpected         = 'This is a test plugin';
+		$authorExpected                   = 'Andrew Dawes';
+		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
+		$textDomainExpected               = 'test-plugin';
+		$domainPathExpected               = '/languages';
+		$networkActualRaw                 = 'true';
+		$networkExpected                  = true;
+		$requiresWordPressVersionExpected = '6.8.2';
+		$requiresPHPVersionExpected       = '8.2.1';
+		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
+		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
+		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
+		$response                         = [
+			'Name'            => $nameExpected,
+			'PluginURI'       => $viewURLExpected,
+			'Version'         => $versionExpected,
+			'Description'     => $shortDescriptionExpected,
+			'Author'          => $authorExpected,
+			'AuthorURI'       => $authorURLExpected,
+			'TextDomain'      => $textDomainExpected,
+			'DomainPath'      => $domainPathExpected,
+			'Network'         => $networkActualRaw,
+			'RequiresWP'      => $requiresWordPressVersionExpected,
+			'RequiresPHP'     => $requiresPHPVersionExpected,
+			'UpdateURI'       => $downloadURLExpected,
+			'RequiresPlugins' => $requiresPluginsActualRaw,
+		];
+		$client                           = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$slugParser = Mockery::mock( SlugParserContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$provider = new PluginPackageMetaProvider( $slugParser, $client );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+		$encoded = json_encode( $provider );
+		$this->assertIsString( $encoded );
+		$decoded = json_decode( $encoded, true );
+		$this->assertIsArray( $decoded );
+		$this->assertArrayHasKey( 'name', $decoded );
+		$this->assertEquals( $nameExpected, $decoded['name'] );
+		$this->assertArrayHasKey( 'fullSlug', $decoded );
+		$this->assertEquals( $fullSlugExpected, $decoded['fullSlug'] );
+		$this->assertArrayHasKey( 'shortSlug', $decoded );
+		$this->assertEquals( $shortSlugExpected, $decoded['shortSlug'] );
+		$this->assertArrayHasKey( 'viewUrl', $decoded );
+		$this->assertEquals( $viewURLExpected, $decoded['viewUrl'] );
+		$this->assertArrayHasKey( 'version', $decoded );
+		$this->assertEquals( $versionExpected, $decoded['version'] );
+		$this->assertArrayHasKey( 'shortDescription', $decoded );
+		$this->assertEquals( $shortDescriptionExpected, $decoded['shortDescription'] );
+		$this->assertArrayHasKey( 'author', $decoded );
+		$this->assertEquals( $authorExpected, $decoded['author'] );
+		$this->assertArrayHasKey( 'authorUrl', $decoded );
+		$this->assertEquals( $authorURLExpected, $decoded['authorUrl'] );
+		$this->assertArrayHasKey( 'textDomain', $decoded );
+		$this->assertEquals( $textDomainExpected, $decoded['textDomain'] );
+		$this->assertArrayHasKey( 'domainPath', $decoded );
+		$this->assertEquals( $domainPathExpected, $decoded['domainPath'] );
+		$this->assertArrayHasKey( 'network', $decoded );
+		$this->assertEquals( $networkExpected, $decoded['network'] );
+		$this->assertArrayHasKey( 'requiresWordPressVersion', $decoded );
+		$this->assertEquals( $requiresWordPressVersionExpected, $decoded['requiresWordPressVersion'] );
+		$this->assertArrayHasKey( 'requiresPHPVersion', $decoded );
+		$this->assertEquals( $requiresPHPVersionExpected, $decoded['requiresPHPVersion'] );
+		$this->assertArrayHasKey( 'downloadUrl', $decoded );
+		$this->assertEquals( $downloadURLExpected, $decoded['downloadUrl'] );
+		$this->assertArrayHasKey( 'requiresPlugins', $decoded );
+		$this->assertEquals( $requiresPluginsExpected, $decoded['requiresPlugins'] );
+		$this->assertArrayHasKey( 'tested', $decoded );
+		$this->assertEquals( null, $decoded['tested'] );
+		$this->assertArrayHasKey( 'stable', $decoded );
+		$this->assertEquals( null, $decoded['stable'] );
+		$this->assertArrayHasKey( 'license', $decoded );
+		$this->assertEquals( null, $decoded['license'] );
+		$this->assertArrayHasKey( 'licenseUrl', $decoded );
+		$this->assertEquals( null, $decoded['licenseUrl'] );
+		$this->assertArrayHasKey( 'description', $decoded );
+		$this->assertEquals( null, $decoded['description'] );
+		$this->assertArrayHasKey( 'tags', $decoded );
+		$this->assertEquals( [], $decoded['tags'] );
+		$this->assertArrayHasKey( 'sections', $decoded );
+		$this->assertEquals( [], $decoded['sections'] );
+	}
 }
