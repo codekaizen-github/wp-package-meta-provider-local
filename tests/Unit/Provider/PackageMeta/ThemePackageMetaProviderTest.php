@@ -28,7 +28,7 @@ class ThemePackageMetaProviderTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testGetNameFromThemeFabledSunset(): void {
+	public function testAllPropertiesFromThemeFabledSunset(): void {
 		$nameExpected                     = 'Test Theme';
 		$fullSlugExpected                 = 'test-theme/style.css';
 		$shortSlugExpected                = 'test-theme';
@@ -50,6 +50,11 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$statusExpected                   = 'publish';
 		$textDomainExpected               = 'test-theme';
 		$domainPathExpected               = '/languages';
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
 		$response                         = [
 			'Name'        => $nameExpected,
 			'ThemeURI'    => $viewURLExpected,
@@ -78,20 +83,122 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $versionExpected, $provider->getVersion() );
 		$this->assertEquals( $viewURLExpected, $provider->getViewURL() );
 		$this->assertEquals( $downloadURLExpected, $provider->getDownloadURL() );
-		$this->assertEquals( null, $provider->getTested() );
-		$this->assertEquals( null, $provider->getStable() );
+		$this->assertEquals( $testedExpected, $provider->getTested() );
+		$this->assertEquals( $stableExpected, $provider->getStable() );
 		$this->assertEquals( $tagsExpected, $provider->getTags() );
 		$this->assertEquals( $authorExpected, $provider->getAuthor() );
 		$this->assertEquals( $authorURLExpected, $provider->getAuthorURL() );
-		$this->assertEquals( null, $provider->getLicense() );
-		$this->assertEquals( null, $provider->getLicenseURL() );
+		$this->assertEquals( $licenseExpected, $provider->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $provider->getLicenseURL() );
 		$this->assertEquals( $shortDescriptionExpected, $provider->getShortDescription() );
-		$this->assertEquals( null, $provider->getDescription() );
+		$this->assertEquals( $descriptionExpected, $provider->getDescription() );
 		$this->assertEquals( $requiresWordPressVersionExpected, $provider->getRequiresWordPressVersion() );
 		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
 		$this->assertEquals( $templateExpected, $provider->getTemplate() );
 		$this->assertEquals( $statusExpected, $provider->getStatus() );
 		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
 		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
+	}
+	/**
+	 * Undocumented function.
+	 *
+	 * @return void
+	 */
+	public function testJSONEncodeAndDecode(): void {
+		$nameExpected                     = 'Test Theme';
+		$fullSlugExpected                 = 'test-theme/style.css';
+		$shortSlugExpected                = 'test-theme';
+		$versionExpected                  = '3.0.1';
+		$viewURLExpected                  = 'https://codekaizen.net';
+		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
+		$tagsActualRaw                    = 'awesome,cool,test';
+		$tagsExpected                     = [
+			'awesome',
+			'cool',
+			'test',
+		];
+		$authorExpected                   = 'Andrew Dawes';
+		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
+		$shortDescriptionExpected         = 'This is a test theme';
+		$requiresWordPressVersionExpected = '6.8.2';
+		$requiresPHPVersionExpected       = '8.2.1';
+		$templateExpected                 = 'parent-theme';
+		$statusExpected                   = 'publish';
+		$textDomainExpected               = 'test-theme';
+		$domainPathExpected               = '/languages';
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$response                         = [
+			'Name'        => $nameExpected,
+			'ThemeURI'    => $viewURLExpected,
+			'Description' => $shortDescriptionExpected,
+			'Author'      => $authorExpected,
+			'AuthorURI'   => $authorURLExpected,
+			'Version'     => $versionExpected,
+			'Template'    => $templateExpected,
+			'Status'      => $statusExpected,
+			'Tags'        => $tagsActualRaw,
+			'TextDomain'  => $textDomainExpected,
+			'DomainPath'  => $domainPathExpected,
+			'RequiresWP'  => $requiresWordPressVersionExpected,
+			'RequiresPHP' => $requiresPHPVersionExpected,
+			'UpdateURI'   => $downloadURLExpected,
+		];
+		$client                           = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$slugParser = Mockery::mock( SlugParserContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$provider = new ThemePackageMetaProvider( $slugParser, $client );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+		$encoded = json_encode( $provider );
+		$this->assertIsString( $encoded );
+		$decoded = json_decode( $encoded, true );
+		$this->assertIsArray( $decoded );
+		$this->assertArrayHasKey( 'name', $decoded );
+		$this->assertEquals( $nameExpected, $decoded['name'] );
+		$this->assertArrayHasKey( 'fullSlug', $decoded );
+		$this->assertEquals( $fullSlugExpected, $decoded['fullSlug'] );
+		$this->assertArrayHasKey( 'shortSlug', $decoded );
+		$this->assertEquals( $shortSlugExpected, $decoded['shortSlug'] );
+		$this->assertArrayHasKey( 'version', $decoded );
+		$this->assertEquals( $versionExpected, $decoded['version'] );
+		$this->assertArrayHasKey( 'viewUrl', $decoded );
+		$this->assertEquals( $viewURLExpected, $decoded['viewUrl'] );
+		$this->assertArrayHasKey( 'downloadUrl', $decoded );
+		$this->assertEquals( $downloadURLExpected, $decoded['downloadUrl'] );
+		$this->assertArrayHasKey( 'tested', $decoded );
+		$this->assertEquals( $testedExpected, $decoded['tested'] );
+		$this->assertArrayHasKey( 'stable', $decoded );
+		$this->assertEquals( $stableExpected, $decoded['stable'] );
+		$this->assertArrayHasKey( 'tags', $decoded );
+		$this->assertEquals( $tagsExpected, $decoded['tags'] );
+		$this->assertArrayHasKey( 'author', $decoded );
+		$this->assertEquals( $authorExpected, $decoded['author'] );
+		$this->assertArrayHasKey( 'authorUrl', $decoded );
+		$this->assertEquals( $authorURLExpected, $decoded['authorUrl'] );
+		$this->assertArrayHasKey( 'license', $decoded );
+		$this->assertEquals( $licenseExpected, $decoded['license'] );
+		$this->assertArrayHasKey( 'licenseUrl', $decoded );
+		$this->assertEquals( $licenseURLExpected, $decoded['licenseUrl'] );
+		$this->assertArrayHasKey( 'shortDescription', $decoded );
+		$this->assertEquals( $shortDescriptionExpected, $decoded['shortDescription'] );
+		$this->assertArrayHasKey( 'description', $decoded );
+		$this->assertEquals( $descriptionExpected, $decoded['description'] );
+		$this->assertArrayHasKey( 'requiresWordPressVersion', $decoded );
+		$this->assertEquals( $requiresWordPressVersionExpected, $decoded['requiresWordPressVersion'] );
+		$this->assertArrayHasKey( 'requiresPHPVersion', $decoded );
+		$this->assertEquals( $requiresPHPVersionExpected, $decoded['requiresPHPVersion'] );
+		$this->assertArrayHasKey( 'template', $decoded );
+		$this->assertEquals( $templateExpected, $decoded['template'] );
+		$this->assertArrayHasKey( 'status', $decoded );
+		$this->assertEquals( $statusExpected, $decoded['status'] );
+		$this->assertArrayHasKey( 'textDomain', $decoded );
+		$this->assertEquals( $textDomainExpected, $decoded['textDomain'] );
+		$this->assertArrayHasKey( 'domainPath', $decoded );
+		$this->assertEquals( $domainPathExpected, $decoded['domainPath'] );
 	}
 }

@@ -46,6 +46,13 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
 		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$tagsExpected                     = [];
+		$sectionsExpected                 = [];
 		$response                         = [
 			'Name'            => $nameExpected,
 			'PluginURI'       => $viewURLExpected,
@@ -82,13 +89,13 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
 		$this->assertEquals( $downloadURLExpected, $provider->getDownloadURL() );
 		$this->assertEquals( $requiresPluginsExpected, $provider->getRequiresPlugins() );
-		$this->assertEquals( null, $provider->getTested() );
-		$this->assertEquals( null, $provider->getStable() );
-		$this->assertEquals( null, $provider->getLicense() );
-		$this->assertEquals( null, $provider->getLicenseURL() );
-		$this->assertEquals( null, $provider->getDescription() );
-		$this->assertEquals( [], $provider->getTags() );
-		$this->assertEquals( [], $provider->getSections() );
+		$this->assertEquals( $testedExpected, $provider->getTested() );
+		$this->assertEquals( $stableExpected, $provider->getStable() );
+		$this->assertEquals( $licenseExpected, $provider->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $provider->getLicenseURL() );
+		$this->assertEquals( $descriptionExpected, $provider->getDescription() );
+		$this->assertEquals( $tagsExpected, $provider->getTags() );
+		$this->assertEquals( $sectionsExpected, $provider->getSections() );
 	}
 	/**
 	 * Test
@@ -114,6 +121,13 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
 		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$tagsExpected                     = [];
+		$sectionsExpected                 = [];
 		$response                         = [
 			'Name'            => $nameExpected,
 			'PluginURI'       => $viewURLExpected,
@@ -171,18 +185,18 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$this->assertArrayHasKey( 'requiresPlugins', $decoded );
 		$this->assertEquals( $requiresPluginsExpected, $decoded['requiresPlugins'] );
 		$this->assertArrayHasKey( 'tested', $decoded );
-		$this->assertEquals( null, $decoded['tested'] );
+		$this->assertEquals( $testedExpected, $decoded['tested'] );
 		$this->assertArrayHasKey( 'stable', $decoded );
-		$this->assertEquals( null, $decoded['stable'] );
+		$this->assertEquals( $stableExpected, $decoded['stable'] );
 		$this->assertArrayHasKey( 'license', $decoded );
-		$this->assertEquals( null, $decoded['license'] );
+		$this->assertEquals( $licenseExpected, $decoded['license'] );
 		$this->assertArrayHasKey( 'licenseUrl', $decoded );
-		$this->assertEquals( null, $decoded['licenseUrl'] );
+		$this->assertEquals( $licenseURLExpected, $decoded['licenseUrl'] );
 		$this->assertArrayHasKey( 'description', $decoded );
-		$this->assertEquals( null, $decoded['description'] );
+		$this->assertEquals( $descriptionExpected, $decoded['description'] );
 		$this->assertArrayHasKey( 'tags', $decoded );
-		$this->assertEquals( [], $decoded['tags'] );
+		$this->assertEquals( $tagsExpected, $decoded['tags'] );
 		$this->assertArrayHasKey( 'sections', $decoded );
-		$this->assertEquals( [], $decoded['sections'] );
+		$this->assertEquals( $sectionsExpected, $decoded['sections'] );
 	}
 }
