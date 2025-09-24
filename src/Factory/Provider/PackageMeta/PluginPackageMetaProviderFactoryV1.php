@@ -12,6 +12,7 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaProviderFactoryContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
+use CodeKaizen\WPPackageMetaProviderLocal\Parser\FilePathSlugParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -54,8 +55,9 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 	 * @return PluginPackageMetaContract
 	 */
 	public function create(): PluginPackageMetaContract {
-		$reader = new FileContentAccessor( $this->filePath );
-		$parser = new SelectHeadersAccessor(
+		$reader     = new FileContentAccessor( $this->filePath );
+		$slugParser = new FilePathSlugParser( $this->filePath );
+		$parser     = new SelectHeadersAccessor(
 			$reader,
 			[
 				'Name'            => 'Plugin Name',
@@ -75,6 +77,6 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 				// '_sitewide'       => 'Site Wide Only', // deprecated.
 			]
 		);
-		return new PluginPackageMetaProvider( $parser );
+		return new PluginPackageMetaProvider( $slugParser, $parser );
 	}
 }

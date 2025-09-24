@@ -14,6 +14,7 @@ use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 
 /**
  * Provider for local WordPress plugin package metadata.
@@ -32,18 +33,11 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	protected AssociativeArrayStringToStringAccessorContract $client;
 
 	/**
-	 * Full plugin slug including directory prefix and file extension.
+	 * Undocumented variable
 	 *
-	 * @var string
+	 * @var SlugParserContract
 	 */
-	protected string $fullSlug;
-
-	/**
-	 * Short plugin slug without directory prefix or file extension.
-	 *
-	 * @var string
-	 */
-	protected string $shortSlug;
+	protected SlugParserContract $slugParser;
 
 	/**
 	 * Cached package metadata.
@@ -54,9 +48,14 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	/**
 	 * Constructor.
 	 *
+	 * @param SlugParserContract                             $slugParser Slug parser.
 	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
 	 */
-	public function __construct( AssociativeArrayStringToStringAccessorContract $client ) {
+	public function __construct(
+		SlugParserContract $slugParser,
+		AssociativeArrayStringToStringAccessorContract $client
+	) {
+		$this->slugParser  = $slugParser;
 		$this->client      = $client;
 		$this->packageMeta = null;
 	}
@@ -74,7 +73,7 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string
 	 */
 	public function getFullSlug(): string {
-		return $this->fullSlug;
+		return $this->slugParser->getFullSlug();
 	}
 	/**
 	 * Slug minus any prefix. Should not contain a "/".
@@ -82,7 +81,7 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string
 	 */
 	public function getShortSlug(): string {
-		return $this->shortSlug;
+		return $this->slugParser->getShortSlug();
 	}
 	/**
 	 * Gets the version of the plugin.
@@ -218,10 +217,9 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 	 * @return string[] Array of required plugin identifiers.
 	 */
 	public function getRequiresPlugins(): array {
-		$meta = $this->getPackageMeta();
-		return isset( $meta['RequiresPlugins'] )
-			? array_map( 'trim', explode( ',', $meta['RequiresPlugins'] ) )
-			: [];
+		$rawTags = $this->getPackageMeta()['RequiresPlugins'];
+		return empty( $this->getPackageMeta()['RequiresPlugins'] )
+			? [] : array_map( 'trim', explode( ',', $rawTags ) );
 	}
 	/**
 	 * Gets the sections of the plugin description.
@@ -260,5 +258,36 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 		 * */
 		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
+	}
+	/**
+	 * Undocumented function
+	 *
+	 * @return mixed
+	 */
+	public function jsonSerialize(): mixed {
+		return [
+			'name'                     => $this->getName(),
+			'fullSlug'                 => $this->getFullSlug(),
+			'shortSlug'                => $this->getShortSlug(),
+			'viewUrl'                  => $this->getViewUrl(),
+			'version'                  => $this->getVersion(),
+			'downloadUrl'              => $this->getDownloadUrl(),
+			'tested'                   => $this->getTested(),
+			'stable'                   => $this->getStable(),
+			'tags'                     => $this->getTags(),
+			'author'                   => $this->getAuthor(),
+			'authorUrl'                => $this->getAuthorUrl(),
+			'license'                  => $this->getLicense(),
+			'licenseUrl'               => $this->getLicenseUrl(),
+			'description'              => $this->getDescription(),
+			'shortDescription'         => $this->getShortDescription(),
+			'requiresWordPressVersion' => $this->getRequiresWordPressVersion(),
+			'requiresPHPVersion'       => $this->getRequiresPHPVersion(),
+			'textDomain'               => $this->getTextDomain(),
+			'domainPath'               => $this->getDomainPath(),
+			'requiresPlugins'          => $this->getRequiresPlugins(),
+			'sections'                 => $this->getSections(),
+			'network'                  => $this->getNetwork(),
+		];
 	}
 }
