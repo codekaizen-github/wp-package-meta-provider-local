@@ -1,4 +1,4 @@
-# wp-package-meta-provider-local
+# wp-package-meta-provider-locals
 
 ## Package Meta Provider for Local Package Files
 
