@@ -1,3 +1,3 @@
-# wp-package-meta-provider-locals
+# wp-package-meta-provider-local
 
 
