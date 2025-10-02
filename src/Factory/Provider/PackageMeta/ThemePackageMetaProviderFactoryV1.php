@@ -12,7 +12,7 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaProviderFactoryContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\FilePathSlugParser;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -39,14 +39,27 @@ class ThemePackageMetaProviderFactoryV1 implements ThemePackageMetaProviderFacto
 	protected LoggerInterface $logger;
 
 	/**
+	 * Undocumented variable
+	 *
+	 * @var SlugParserContract
+	 */
+	protected SlugParserContract $slugParser;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string          $filePath Filepath.
-	 * @param LoggerInterface $logger Logger.
+	 * @param string             $filePath Filepath.
+	 * @param SlugParserContract $slugParser Slug Parser.
+	 * @param LoggerInterface    $logger Logger.
 	 */
-	public function __construct( string $filePath, LoggerInterface $logger = new NullLogger() ) {
-		$this->filePath = $filePath;
-		$this->logger   = $logger;
+	public function __contruct(
+		string $filePath,
+		SlugParserContract $slugParser,
+		LoggerInterface $logger = new NullLogger()
+	): void {
+		$this->filePath   = $filePath;
+		$this->slugParser = $slugParser;
+		$this->logger     = $logger;
 	}
 
 	/**
@@ -55,9 +68,8 @@ class ThemePackageMetaProviderFactoryV1 implements ThemePackageMetaProviderFacto
 	 * @return ThemePackageMetaContract
 	 */
 	public function create(): ThemePackageMetaContract {
-		$reader     = new FileContentAccessor( $this->filePath );
-		$slugParser = new FilePathSlugParser( $this->filePath );
-		$parser     = new SelectHeadersAccessor(
+		$reader = new FileContentAccessor( $this->filePath );
+		$parser = new SelectHeadersAccessor(
 			$reader,
 			[
 				'Name'        => 'Theme Name',
@@ -76,6 +88,6 @@ class ThemePackageMetaProviderFactoryV1 implements ThemePackageMetaProviderFacto
 				'UpdateURI'   => 'Update URI',
 			]
 		);
-		return new ThemePackageMetaProvider( $slugParser, $parser );
+		return new ThemePackageMetaProvider( $this->slugParser, $parser );
 	}
 }
