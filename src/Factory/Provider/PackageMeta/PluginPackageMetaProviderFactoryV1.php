@@ -12,7 +12,7 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaProviderFactoryContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
-use CodeKaizen\WPPackageMetaProviderLocal\Parser\FilePathSlugParser;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -39,14 +39,27 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 	protected LoggerInterface $logger;
 
 	/**
+	 * Undocumented variable
+	 *
+	 * @var SlugParserContract
+	 */
+	protected SlugParserContract $slugParser;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string          $filePath Filepath.
-	 * @param LoggerInterface $logger Logger.
+	 * @param string             $filePath Filepath.
+	 * @param SlugParserContract $slugParser Slug Parser.
+	 * @param LoggerInterface    $logger Logger.
 	 */
-	public function __construct( string $filePath, LoggerInterface $logger = new NullLogger() ) {
-		$this->filePath = $filePath;
-		$this->logger   = $logger;
+	public function __contruct(
+		string $filePath,
+		SlugParserContract $slugParser,
+		LoggerInterface $logger = new NullLogger()
+	): void {
+		$this->filePath   = $filePath;
+		$this->slugParser = $slugParser;
+		$this->logger     = $logger;
 	}
 
 	/**
@@ -55,9 +68,8 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 	 * @return PluginPackageMetaContract
 	 */
 	public function create(): PluginPackageMetaContract {
-		$reader     = new FileContentAccessor( $this->filePath );
-		$slugParser = new FilePathSlugParser( $this->filePath );
-		$parser     = new SelectHeadersAccessor(
+		$reader = new FileContentAccessor( $this->filePath );
+		$parser = new SelectHeadersAccessor(
 			$reader,
 			[
 				'Name'            => 'Plugin Name',
@@ -77,6 +89,6 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 				// '_sitewide'       => 'Site Wide Only', // deprecated.
 			]
 		);
-		return new PluginPackageMetaProvider( $slugParser, $parser );
+		return new PluginPackageMetaProvider( $this->slugParser, $parser );
 	}
 }
