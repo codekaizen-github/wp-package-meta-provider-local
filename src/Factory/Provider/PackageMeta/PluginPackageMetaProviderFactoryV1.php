@@ -52,11 +52,11 @@ class PluginPackageMetaProviderFactoryV1 implements PluginPackageMetaProviderFac
 	 * @param SlugParserContract $slugParser Slug Parser.
 	 * @param LoggerInterface    $logger Logger.
 	 */
-	public function __contruct(
+	public function __construct(
 		string $filePath,
 		SlugParserContract $slugParser,
 		LoggerInterface $logger = new NullLogger()
-	): void {
+	) {
 		$this->filePath   = $filePath;
 		$this->slugParser = $slugParser;
 		$this->logger     = $logger;
