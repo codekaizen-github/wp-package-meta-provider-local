@@ -4,7 +4,7 @@
  *
  * Tests for validating file content reading functionality.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Reader
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor
  * @since 1.0.0
  */
 

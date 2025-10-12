@@ -4,7 +4,7 @@
  *
  * Provides a way to read the contents of a file.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Accessor
  * @since 1.0.0
  */
 

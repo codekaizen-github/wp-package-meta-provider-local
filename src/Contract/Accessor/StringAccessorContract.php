@@ -2,7 +2,7 @@
 /**
  * Interface for StringAccessorContract
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor
  */
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor;
