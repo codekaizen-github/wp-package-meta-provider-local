@@ -4,7 +4,7 @@
  *
  * Provides metadata for WordPress themes installed locally.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta
  * @since 1.0.0
  */
 

@@ -2,7 +2,7 @@
 /**
  * Local Theme Package Meta Provider Factory
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta
  * @since 1.0.0
  */
 

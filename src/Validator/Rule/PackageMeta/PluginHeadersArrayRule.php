@@ -4,7 +4,7 @@
  *
  * This file contains a validation rule for WordPress plugin header arrays.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta
  * @since 1.0.0
  */
 

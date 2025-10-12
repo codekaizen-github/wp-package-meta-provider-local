@@ -4,7 +4,7 @@
  *
  * Parses file content to extract metadata from headers based on regex patterns.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Accessor
  * @since 1.0.0
  */
 

@@ -2,7 +2,7 @@
 /**
  * Test
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Provider\PackageMeta
  */
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Provider\PackageMeta;
