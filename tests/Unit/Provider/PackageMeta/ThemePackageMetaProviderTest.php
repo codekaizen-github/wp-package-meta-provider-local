@@ -213,7 +213,7 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $iconsExpected, $decoded['icons'] );
 		$this->assertArrayHasKey( 'banners', $decoded );
 		$this->assertEquals( $bannersExpected, $decoded['banners'] );
-		$this->assertArrayHasKey( 'bannersRTL', $decoded );
-		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRTL'] );
+		$this->assertArrayHasKey( 'bannersRtl', $decoded );
+		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRtl'] );
 	}
 }

@@ -311,7 +311,7 @@ class PluginPackageMetaProvider implements PluginPackageMetaProviderContract {
 			'domainPath'               => $this->getDomainPath(),
 			'icons'                    => $this->getIcons(),
 			'banners'                  => $this->getBanners(),
-			'bannersRTL'               => $this->getBannersRTL(),
+			'bannersRtl'               => $this->getBannersRTL(),
 			'requiresPlugins'          => $this->getRequiresPlugins(),
 			'sections'                 => $this->getSections(),
 			'network'                  => $this->getNetwork(),

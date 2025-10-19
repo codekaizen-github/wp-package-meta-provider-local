@@ -303,7 +303,7 @@ class ThemePackageMetaProvider implements ThemePackageMetaProviderContract {
 			'domainPath'               => $this->getDomainPath(),
 			'icons'                    => $this->getIcons(),
 			'banners'                  => $this->getBanners(),
-			'bannersRTL'               => $this->getBannersRTL(),
+			'bannersRtl'               => $this->getBannersRTL(),
 			'template'                 => $this->getTemplate(),
 			'status'                   => $this->getStatus(),
 		];
