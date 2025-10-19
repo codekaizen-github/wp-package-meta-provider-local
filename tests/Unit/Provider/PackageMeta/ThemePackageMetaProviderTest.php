@@ -50,6 +50,9 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$statusExpected                   = 'publish';
 		$textDomainExpected               = 'test-theme';
 		$domainPathExpected               = '/languages';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
 		$testedExpected                   = null;
 		$stableExpected                   = null;
 		$licenseExpected                  = null;
@@ -98,6 +101,9 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $statusExpected, $provider->getStatus() );
 		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
 		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
+		$this->assertEquals( $iconsExpected, $provider->getIcons() );
+		$this->assertEquals( $bannersExpected, $provider->getBanners() );
+		$this->assertEquals( $bannersRTLExpected, $provider->getBannersRTL() );
 	}
 	/**
 	 * Undocumented function.
@@ -126,6 +132,9 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$statusExpected                   = 'publish';
 		$textDomainExpected               = 'test-theme';
 		$domainPathExpected               = '/languages';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
 		$testedExpected                   = null;
 		$stableExpected                   = null;
 		$licenseExpected                  = null;
@@ -200,5 +209,11 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $textDomainExpected, $decoded['textDomain'] );
 		$this->assertArrayHasKey( 'domainPath', $decoded );
 		$this->assertEquals( $domainPathExpected, $decoded['domainPath'] );
+		$this->assertArrayHasKey( 'icons', $decoded );
+		$this->assertEquals( $iconsExpected, $decoded['icons'] );
+		$this->assertArrayHasKey( 'banners', $decoded );
+		$this->assertEquals( $bannersExpected, $decoded['banners'] );
+		$this->assertArrayHasKey( 'bannersRTL', $decoded );
+		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRTL'] );
 	}
 }

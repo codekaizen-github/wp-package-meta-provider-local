@@ -39,6 +39,9 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
 		$textDomainExpected               = 'test-plugin';
 		$domainPathExpected               = '/languages';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
 		$networkActualRaw                 = 'true';
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
@@ -84,6 +87,9 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $authorURLExpected, $provider->getAuthorURL() );
 		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
 		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
+		$this->assertEquals( $iconsExpected, $provider->getIcons() );
+		$this->assertEquals( $bannersExpected, $provider->getBanners() );
+		$this->assertEquals( $bannersRTLExpected, $provider->getBannersRTL() );
 		$this->assertEquals( $networkExpected, $provider->getNetwork() );
 		$this->assertEquals( $requiresWordPressVersionExpected, $provider->getRequiresWordPressVersion() );
 		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
@@ -114,6 +120,9 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
 		$textDomainExpected               = 'test-plugin';
 		$domainPathExpected               = '/languages';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
 		$networkActualRaw                 = 'true';
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
@@ -174,6 +183,12 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $textDomainExpected, $decoded['textDomain'] );
 		$this->assertArrayHasKey( 'domainPath', $decoded );
 		$this->assertEquals( $domainPathExpected, $decoded['domainPath'] );
+		$this->assertArrayHasKey( 'icons', $decoded );
+		$this->assertEquals( $iconsExpected, $decoded['icons'] );
+		$this->assertArrayHasKey( 'banners', $decoded );
+		$this->assertEquals( $bannersExpected, $decoded['banners'] );
+		$this->assertArrayHasKey( 'bannersRTL', $decoded );
+		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRTL'] );
 		$this->assertArrayHasKey( 'network', $decoded );
 		$this->assertEquals( $networkExpected, $decoded['network'] );
 		$this->assertArrayHasKey( 'requiresWordPressVersion', $decoded );

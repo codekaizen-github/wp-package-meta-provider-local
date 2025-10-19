@@ -10,8 +10,8 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
 
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\ThemePackageMetaProviderContract;
 use Respect\Validation\Validator;
-use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
@@ -23,7 +23,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
  *
  * @since 1.0.0
  */
-class ThemePackageMetaProvider implements ThemePackageMetaContract {
+class ThemePackageMetaProvider implements ThemePackageMetaProviderContract {
 	/**
 	 * HTTP client.
 	 *
@@ -214,6 +214,30 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 		return $this->getPackageMeta()['DomainPath'] ?? null;
 	}
 	/**
+	 * Gets the icons for the theme.
+	 *
+	 * @return array<string,string> Associative array of icons.
+	 */
+	public function getIcons(): array {
+		return [];
+	}
+	/**
+	 * Gets the banners for the theme.
+	 *
+	 * @return array<string,string> Associative array of banners.
+	 */
+	public function getBanners(): array {
+		return [];
+	}
+	/**
+	 * Gets the banners for the theme in RTL languages.
+	 *
+	 * @return array<string,string> Associative array of RTL banners.
+	 */
+	public function getBannersRTL(): array {
+		return [];
+	}
+	/**
 	 * Gets the template for the theme.
 	 *
 	 * @return ?string The template or null if not specified.
@@ -277,6 +301,9 @@ class ThemePackageMetaProvider implements ThemePackageMetaContract {
 			'requiresPHPVersion'       => $this->getRequiresPHPVersion(),
 			'textDomain'               => $this->getTextDomain(),
 			'domainPath'               => $this->getDomainPath(),
+			'icons'                    => $this->getIcons(),
+			'banners'                  => $this->getBanners(),
+			'bannersRTL'               => $this->getBannersRTL(),
 			'template'                 => $this->getTemplate(),
 			'status'                   => $this->getStatus(),
 		];

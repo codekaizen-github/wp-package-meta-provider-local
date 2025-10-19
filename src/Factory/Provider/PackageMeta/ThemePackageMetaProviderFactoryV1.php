@@ -8,8 +8,9 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Provider\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract;
-use CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaProviderFactoryContract;
+// phpcs:ignore Generic.Files.LineLength.TooLong
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Factory\Provider\PackageMeta\ThemePackageMetaProviderFactoryContract;
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\ThemePackageMetaProviderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
@@ -65,9 +66,9 @@ class ThemePackageMetaProviderFactoryV1 implements ThemePackageMetaProviderFacto
 	/**
 	 * Creates a new ThemePackageMetaProvider instance.
 	 *
-	 * @return ThemePackageMetaContract
+	 * @return ThemePackageMetaProviderContract
 	 */
-	public function create(): ThemePackageMetaContract {
+	public function create(): ThemePackageMetaProviderContract {
 		$reader = new FileContentAccessor( $this->filePath );
 		$parser = new SelectHeadersAccessor(
 			$reader,
