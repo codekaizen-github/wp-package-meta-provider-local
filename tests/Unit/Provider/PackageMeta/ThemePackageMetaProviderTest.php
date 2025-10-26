@@ -216,4 +216,70 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertArrayHasKey( 'bannersRtl', $decoded );
 		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRtl'] );
 	}
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function testBareMinimumFieldsValid(): void {
+		$nameExpected                     = 'Test Theme';
+		$fullSlugExpected                 = 'test-theme/style.css';
+		$shortSlugExpected                = 'test-theme';
+		$viewURLExpected                  = null;
+		$versionExpected                  = null;
+		$downloadURLExpected              = null;
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$tagsExpected                     = [];
+		$authorExpected                   = null;
+		$authorURLExpected                = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$shortDescriptionExpected         = null;
+		$requiresWordPressVersionExpected = null;
+		$requiresPHPVersionExpected       = null;
+		$templateExpected                 = null;
+		$statusExpected                   = null;
+		$textDomainExpected               = null;
+		$domainPathExpected               = null;
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRtlExpected               = [];
+		$response                         = [
+			'Name' => $nameExpected,
+		];
+		$metaAnnotationKeyAccessor        = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
+		$client = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
+		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$slugParser = Mockery::mock( SlugParserContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$provider = new ThemePackageMetaProvider( $slugParser, $client );
+		$this->assertEquals( $nameExpected, $provider->getName() );
+		$this->assertEquals( $fullSlugExpected, $provider->getFullSlug() );
+		$this->assertEquals( $shortSlugExpected, $provider->getShortSlug() );
+		$this->assertEquals( $versionExpected, $provider->getVersion() );
+		$this->assertEquals( $viewURLExpected, $provider->getViewURL() );
+		$this->assertEquals( $downloadURLExpected, $provider->getDownloadURL() );
+		$this->assertEquals( $testedExpected, $provider->getTested() );
+		$this->assertEquals( $stableExpected, $provider->getStable() );
+		$this->assertEquals( $tagsExpected, $provider->getTags() );
+		$this->assertEquals( $authorExpected, $provider->getAuthor() );
+		$this->assertEquals( $authorURLExpected, $provider->getAuthorURL() );
+		$this->assertEquals( $licenseExpected, $provider->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $provider->getLicenseURL() );
+		$this->assertEquals( $shortDescriptionExpected, $provider->getShortDescription() );
+		$this->assertEquals( $descriptionExpected, $provider->getDescription() );
+		$this->assertEquals( $requiresWordPressVersionExpected, $provider->getRequiresWordPressVersion() );
+		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
+		$this->assertEquals( $templateExpected, $provider->getTemplate() );
+		$this->assertEquals( $statusExpected, $provider->getStatus() );
+		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
+		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
+		$this->assertEquals( $iconsExpected, $provider->getIcons() );
+		$this->assertEquals( $bannersExpected, $provider->getBanners() );
+		$this->assertEquals( $bannersRtlExpected, $provider->getBannersRtl() );
+	}
 }
