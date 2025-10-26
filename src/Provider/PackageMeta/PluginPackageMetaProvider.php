@@ -11,7 +11,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
 
 use Respect\Validation\Validator;
-use CodeKaizen\WPPackageMetaProviderContract\Contract\PluginPackageMetaContract;
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\PluginPackageMetaProviderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
@@ -23,7 +23,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
  *
  * @since 1.0.0
  */
-class PluginPackageMetaProvider implements PluginPackageMetaContract {
+class PluginPackageMetaProvider implements PluginPackageMetaProviderContract {
 
 	/**
 	 * HTTP client.
@@ -212,6 +212,30 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 		return $this->getPackageMeta()['DomainPath'] ?? null;
 	}
 	/**
+	 * Gets the icons for the theme.
+	 *
+	 * @return array<string,string> Associative array of icons.
+	 */
+	public function getIcons(): array {
+		return [];
+	}
+	/**
+	 * Gets the banners for the theme.
+	 *
+	 * @return array<string,string> Associative array of banners.
+	 */
+	public function getBanners(): array {
+		return [];
+	}
+	/**
+	 * Gets the banners for the theme in RTL languages.
+	 *
+	 * @return array<string,string> Associative array of RTL banners.
+	 */
+	public function getBannersRTL(): array {
+		return [];
+	}
+	/**
 	 * Gets the list of plugins that this plugin requires.
 	 *
 	 * @return string[] Array of required plugin identifiers.
@@ -285,6 +309,9 @@ class PluginPackageMetaProvider implements PluginPackageMetaContract {
 			'requiresPHPVersion'       => $this->getRequiresPHPVersion(),
 			'textDomain'               => $this->getTextDomain(),
 			'domainPath'               => $this->getDomainPath(),
+			'icons'                    => $this->getIcons(),
+			'banners'                  => $this->getBanners(),
+			'bannersRtl'               => $this->getBannersRTL(),
 			'requiresPlugins'          => $this->getRequiresPlugins(),
 			'sections'                 => $this->getSections(),
 			'network'                  => $this->getNetwork(),

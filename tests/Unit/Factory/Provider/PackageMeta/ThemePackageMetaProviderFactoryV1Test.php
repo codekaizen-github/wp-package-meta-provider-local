@@ -33,12 +33,12 @@ class ThemePackageMetaProviderFactoryV1Test extends TestCase {
 		Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor' );
 		Mockery::mock(
 			'overload:CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\ThemePackageMetaProvider',
-			'CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract'
+			'CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\ThemePackageMetaProviderContract'
 		);
 		$sut    = new ThemePackageMetaProviderFactoryV1( $filePath, $slugParser, $logger );
 		$result = $sut->create();
 		$this->assertInstanceOf(
-			'CodeKaizen\WPPackageMetaProviderContract\Contract\ThemePackageMetaContract',
+			'CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\ThemePackageMetaProviderContract',
 			$result
 		);
 	}
