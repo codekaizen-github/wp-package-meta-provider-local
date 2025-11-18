@@ -4,14 +4,14 @@
  *
  * Parses file content to extract metadata from headers based on regex patterns.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Accessor
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Parser
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Accessor;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Parser;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+
 use UnexpectedValueException;
 
 /**
@@ -19,15 +19,8 @@ use UnexpectedValueException;
  *
  * @since 1.0.0
  */
-class SelectHeadersAccessor implements AssociativeArrayStringToStringAccessorContract {
+class HeadersParser implements StringToArrayStringByStringParserContract {
 
-
-	/**
-	 * Undocumented variable
-	 *
-	 * @var StringAccessorContract
-	 */
-	protected StringAccessorContract $accessor;
 
 	/**
 	 * Headers to extract from content.
@@ -39,22 +32,12 @@ class SelectHeadersAccessor implements AssociativeArrayStringToStringAccessorCon
 	/**
 	 * Constructor.
 	 *
-	 * @param StringAccessorContract $accessor Accessor.
-	 * @param array<string,string>   $headers Map of header field names to regex patterns.
+	 * @param array<string,string> $headers Map of header field names to regex patterns.
 	 */
-	public function __construct( StringAccessorContract $accessor, array $headers = [] ) {
-		$this->accessor = $accessor;
-		$this->headers  = $headers;
+	public function __construct( array $headers = [] ) {
+		$this->headers = $headers;
 	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @return array<string,string>
-	 */
-	public function get(): array {
-		return $this->parse( $this->accessor->get() );
-	}
 	/**
 	 * Parse the file contents to retrieve its metadata.
 	 *
@@ -65,7 +48,7 @@ class SelectHeadersAccessor implements AssociativeArrayStringToStringAccessorCon
 	 * @param string $content The content to parse.
 	 * @return array<string, string> Extracted header values.
 	 */
-	protected function parse( string $content ): array {
+	public function parse( string $content ): array {
 
 		// Make sure we catch CR-only line endings.
 		$content    = str_replace( "\r", "\n", $content );

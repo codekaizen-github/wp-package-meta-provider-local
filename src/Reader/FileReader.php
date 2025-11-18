@@ -4,23 +4,23 @@
  *
  * Provides a way to read the contents of a file.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Accessor
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Reader
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Accessor;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Reader;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\StringAccessorContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use InvalidArgumentException;
 
 /**
- * FileContentAccessor class implements the FileContentReaderContract interface.
+ * FileContentReader class implements the FileContentReaderContract interface.
  *
  * Reads content from files with size limits for performance.
  *
  * @since 1.0.0
  */
-class FileContentAccessor implements StringAccessorContract {
+class FileContentReader implements ReaderContract {
 
 	/**
 	 * Undocumented variable
@@ -32,13 +32,8 @@ class FileContentAccessor implements StringAccessorContract {
 	 * Undocumented function
 	 *
 	 * @param string $filePath Filepath.
-	 * @throws InvalidArgumentException On invalid or inaccessible filepath.
 	 */
 	public function __construct( string $filePath ) {
-		if ( ! file_exists( $filePath ) || ! is_readable( $filePath ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message not displayed to end users.
-			throw new InvalidArgumentException( "Invalid or inaccessible file path: $filePath" );
-		}
 		$this->filePath = $filePath;
 	}
 	/**
@@ -47,7 +42,11 @@ class FileContentAccessor implements StringAccessorContract {
 	 * @return string The content of the file.
 	 * @throws InvalidArgumentException If the file doesn't exist or is not readable.
 	 */
-	public function get(): string {
+	public function read(): string {
+		if ( ! file_exists( $this->filePath ) || ! is_readable( $this->filePath ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message not displayed to end users.
+			throw new InvalidArgumentException( "Invalid or inaccessible file path: $this->filePath" );
+		}
 		$kbInBytes = 1024;
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Not in WordPress context.
 		$fileData = file_get_contents( $this->filePath, false, null, 0, 8 * $kbInBytes );

@@ -4,17 +4,20 @@
  *
  * Provides metadata for WordPress themes installed locally.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderContract\Contract\Provider\PackageMeta\ThemePackageMetaProviderContract;
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use Respect\Validation\Validator;
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Throwable;
+use UnexpectedValueException;
 
 /**
  * Provider for local WordPress theme package metadata.
@@ -23,41 +26,54 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
  *
  * @since 1.0.0
  */
-class ThemePackageMetaProvider implements ThemePackageMetaProviderContract {
+class ThemePackageMetaValue implements ThemePackageMetaValueContract {
+
 	/**
-	 * HTTP client.
+	 * Logger.
 	 *
-	 * @var AssociativeArrayStringToStringAccessorContract
+	 * @var LoggerInterface
 	 */
-	protected AssociativeArrayStringToStringAccessorContract $client;
+	protected LoggerInterface $logger;
 
 	/**
 	 * Undocumented variable
 	 *
-	 * @var SlugParserContract
+	 * @var SlugValueContract
 	 */
-	protected SlugParserContract $slugParser;
-
+	protected SlugValueContract $slugParser;
 
 	/**
 	 * Cached package metadata.
 	 *
-	 * @var ?array<string,string>
+	 * @var array<string,string>
 	 */
-	protected ?array $packageMeta;
+	protected array $packageMeta;
 	/**
 	 * Constructor.
 	 *
-	 * @param SlugParserContract                             $slugParser Slug parser.
-	 * @param AssociativeArrayStringToStringAccessorContract $client HTTP client.
+	 * @param array<string,string> $packageMeta Data.
+	 * @param LoggerInterface      $logger Logger.
+	 * @throws UnexpectedValueException If the metadata is invalid.
 	 */
 	public function __construct(
-		SlugParserContract $slugParser,
-		AssociativeArrayStringToStringAccessorContract $client
+		array $packageMeta,
+		LoggerInterface $logger = new NullLogger()
 	) {
-		$this->slugParser  = $slugParser;
-		$this->client      = $client;
-		$this->packageMeta = null;
+		$this->logger = $logger;
+		try {
+			Validator::create( new ThemeHeadersArrayRule() )->check( $packageMeta );
+		} catch ( Throwable $e ) {
+			$this->logger->error(
+				'Failed to validate theme metadata.',
+				[
+					'exception'   => $e,
+					'packageMeta' => $packageMeta,
+				]
+			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message not displayed to end users.
+			throw new UnexpectedValueException( 'Invalid theme metadata.', 0, $e );
+		}
+		$this->packageMeta = $packageMeta;
 	}
 	/**
 	 * Gets the name of the theme.
@@ -260,19 +276,9 @@ class ThemePackageMetaProvider implements ThemePackageMetaProviderContract {
 	 * Result is cached for subsequent calls.
 	 *
 	 * @return array<string,string> Associative array of theme metadata.
+	 * @throws UnexpectedValueException If the metadata is invalid.
 	 */
 	protected function getPackageMeta(): array {
-		if ( null !== $this->packageMeta ) {
-			return $this->packageMeta;
-		}
-		$metaArray = $this->client->get();
-		Validator::create( new ThemeHeadersArrayRule() )->check( $metaArray );
-		/**
-		 * Meta array will have been validated.
-		 *
-		 * @var array<string,string> $metaArray
-		 * */
-		$this->packageMeta = $metaArray;
 		return $this->packageMeta;
 	}
 	/**
