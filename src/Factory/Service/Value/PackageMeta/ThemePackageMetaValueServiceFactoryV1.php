@@ -8,9 +8,11 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\ResponsePackageMetaArrayAssembler;
+use CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
+use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
 use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\ThemePackageMetaValueService;
-use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -23,21 +25,14 @@ class ThemePackageMetaValueServiceFactoryV1 {
 	 *
 	 * @var string
 	 */
-	protected string $url;
+	protected string $filePath;
 
 	/**
 	 * Key to extract metadata from.
 	 *
-	 * @var string
+	 * @var SlugValueContract
 	 */
-	protected string $metaAnnotationKey;
-
-	/**
-	 * Undocumented variable
-	 *
-	 * @var array<string,mixed>
-	 */
-	protected array $httpOptions;
+	protected SlugValueContract $slugParser;
 
 	/**
 	 * Undocumented variable
@@ -49,21 +44,18 @@ class ThemePackageMetaValueServiceFactoryV1 {
 	/**
 	 * Constructor.
 	 *
-	 * @param string              $url Endpoint with meta information.
-	 * @param string              $metaAnnotationKey Key to extract meta information from.
-	 * @param array<string,mixed> $httpOptions HTTP client options.
-	 * @param LoggerInterface     $logger Logger.
+	 * @param string            $filePath File with meta information.
+	 * @param SlugValueContract $slugParser Slug data.
+	 * @param LoggerInterface   $logger Logger.
 	 */
 	public function __construct(
-		string $url,
-		string $metaAnnotationKey = 'org.codekaizen-github.wp-package-deploy.wp-package-metadata',
-		array $httpOptions = [],
+		string $filePath,
+		SlugValueContract $slugParser,
 		LoggerInterface $logger = new NullLogger()
 	) {
-		$this->url               = $url;
-		$this->metaAnnotationKey = $metaAnnotationKey;
-		$this->httpOptions       = $httpOptions;
-		$this->logger            = $logger;
+		$this->filePath   = $filePath;
+		$this->slugParser = $slugParser;
+		$this->logger     = $logger;
 	}
 	/**
 	 * Creates a new ThemePackageMetaValueService instance.
@@ -71,15 +63,31 @@ class ThemePackageMetaValueServiceFactoryV1 {
 	 * @return ThemePackageMetaValueServiceContract
 	 */
 	public function create(): ThemePackageMetaValueServiceContract {
-		$assembler = new ResponsePackageMetaArrayAssembler(
-			$this->metaAnnotationKey,
+		$assembler = new StringPackageMetaArrayAssembler(
+			new HeadersParser(
+				[
+					'Name'        => 'Theme Name',
+					'ThemeURI'    => 'Theme URI',
+					'Description' => 'Description',
+					'Author'      => 'Author',
+					'AuthorURI'   => 'Author URI',
+					'Version'     => 'Version',
+					'Template'    => 'Template',
+					'Status'      => 'Status',
+					'Tags'        => 'Tags',
+					'TextDomain'  => 'Text Domain',
+					'DomainPath'  => 'Domain Path',
+					'RequiresWP'  => 'Requires at least',
+					'RequiresPHP' => 'Requires PHP',
+					'UpdateURI'   => 'Update URI',
+				]
+			),
 			$this->logger
 		);
-		$client    = new Client( $this->httpOptions );
-		$request   = new \GuzzleHttp\Psr7\Request( 'GET', $this->url );
+		$reader    = new FileReader( $this->filePath );
 		return new ThemePackageMetaValueService(
-			$request,
-			$client,
+			$reader,
+			$this->slugParser,
 			$assembler,
 			$this->logger
 		);

@@ -14,13 +14,13 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use InvalidArgumentException;
 
 /**
- * FileContentReader class implements the FileContentReaderContract interface.
+ * FileReader class implements the FileReaderContract interface.
  *
  * Reads content from files with size limits for performance.
  *
  * @since 1.0.0
  */
-class FileContentReader implements ReaderContract {
+class FileReader implements ReaderContract {
 
 	/**
 	 * Undocumented variable

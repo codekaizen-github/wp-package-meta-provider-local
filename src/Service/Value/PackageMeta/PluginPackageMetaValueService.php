@@ -14,6 +14,7 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPa
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 // phpcs:ignore Generic.Files.LineLength -- Keep import on one line.
 use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue;
 use Psr\Log\LoggerInterface;
@@ -36,6 +37,13 @@ class PluginPackageMetaValueService implements PluginPackageMetaValueServiceCont
 	protected ReaderContract $reader;
 
 	/**
+	 * Slug parser.
+	 *
+	 * @var SlugValueContract
+	 */
+	protected SlugValueContract $slugParser;
+
+	/**
 	 * Assembler.
 	 *
 	 * @var StringPackageMetaArrayAssemblerContract
@@ -53,17 +61,20 @@ class PluginPackageMetaValueService implements PluginPackageMetaValueServiceCont
 	 * Constructor.
 	 *
 	 * @param ReaderContract                          $reader Reader.
+	 * @param SlugValueContract                       $slugParser Slug data.
 	 * @param StringPackageMetaArrayAssemblerContract $assembler Assembler.
 	 * @param LoggerInterface                         $logger Logger.
 	 */
 	public function __construct(
 		ReaderContract $reader,
+		SlugValueContract $slugParser,
 		StringPackageMetaArrayAssemblerContract $assembler,
 		LoggerInterface $logger = new NullLogger()
 	) {
-		$this->reader    = $reader;
-		$this->assembler = $assembler;
-		$this->logger    = $logger;
+		$this->reader     = $reader;
+		$this->slugParser = $slugParser;
+		$this->assembler  = $assembler;
+		$this->logger     = $logger;
 	}
 
 	/**
@@ -76,6 +87,6 @@ class PluginPackageMetaValueService implements PluginPackageMetaValueServiceCont
 	public function getPackageMeta(): PluginPackageMetaValueContract {
 		$content   = $this->reader->read();
 		$assembled = $this->assembler->assemble( $content );
-		return new PluginPackageMetaValue( $assembled );
+		return new PluginPackageMetaValue( $assembled, $this->slugParser, $this->logger );
 	}
 }

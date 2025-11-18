@@ -52,11 +52,13 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 	 * Constructor.
 	 *
 	 * @param array<string,string> $packageMeta Data.
+	 * @param SlugValueContract    $slugParser Slug data.
 	 * @param LoggerInterface      $logger Logger.
 	 * @throws UnexpectedValueException If the metadata is invalid.
 	 */
 	public function __construct(
 		array $packageMeta,
+		SlugValueContract $slugParser,
 		LoggerInterface $logger = new NullLogger()
 	) {
 		$this->logger = $logger;
@@ -74,6 +76,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 			throw new UnexpectedValueException( 'Invalid theme metadata.', 0, $e );
 		}
 		$this->packageMeta = $packageMeta;
+		$this->slugParser  = $slugParser;
 	}
 	/**
 	 * Gets the name of the theme.
