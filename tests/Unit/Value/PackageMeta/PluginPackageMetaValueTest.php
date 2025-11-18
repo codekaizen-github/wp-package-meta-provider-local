@@ -1,8 +1,8 @@
 <?php
 /**
- * Local Plugin Package Meta Provider Test
+ * Local Plugin Package Meta Value Test
  *
- * Tests for the sut that reads and extracts metadata from local plugin files.
+ * Tests for the value that reads and extracts metadata from local plugin files.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta
  * @since 1.0.0
@@ -10,53 +10,18 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta;
 
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue;
+
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
-use Mockery\MockInterface;
 
 /**
- * Tests for the plugin package metadata sut implementation.
+ * Tests for the plugin package metadata value implementation.
  *
  * @since 1.0.0
  */
 class PluginPackageMetaValueTest extends TestCase {
-
-	/**
-	 * Undocumented variable
-	 *
-	 * @var (LoggerInterface&MockInterface)|null
-	 */
-	protected ?LoggerInterface $logger;
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->logger = Mockery::mock( LoggerInterface::class );
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		Mockery::close();
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return LoggerInterface&MockInterface
-	 */
-	protected function getLogger(): LoggerInterface {
-		self::assertNotNull( $this->logger );
-		return $this->logger;
-	}
 
 	/**
 	 * Tests getName() extracts the correct plugin name from the My Basics plugin.
@@ -74,62 +39,42 @@ class PluginPackageMetaValueTest extends TestCase {
 		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
 		$textDomainExpected               = 'test-plugin';
 		$domainPathExpected               = '/languages';
-		$iconsExpected                    = [
-			'1x'  => 'https://example.com/icon-128x128.png',
-			'2x'  => 'https://example.com/icon-256x256.png',
-			'svg' => 'https://example.com/icon.svg',
-		];
-		$bannersExpected                  = [
-			'1x' => 'https://example.com/banner-772x250.png',
-			'2x' => 'https://example.com/banner-1544x500.png',
-		];
-		$bannersRtlExpected               = [
-			'1x' => 'https://example.com/banner-rtl-772x250.png',
-			'2x' => 'https://example.com/banner-rtl-1544x500.png',
-		];
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
+		$networkActualRaw                 = 'true';
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
 		$requiresPHPVersionExpected       = '8.2.1';
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
-		$testedExpected                   = '6.8.2';
-		$stableExpected                   = '6.8.2';
+		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
-		$tagsExpected                     = [ 'tag1', 'tag2', 'tag3' ];
-		$licenseExpected                  = 'GPL v2 or later';
-		$licenseURLExpected               = 'https://www.gnu.org/licenses/gpl-2.0.html';
-		$descriptionExpected              = 'This is a long description of the plugin';
-		$sectionsExpected                 = [
-			'changelog' => 'changed',
-			'about'     => 'this is a plugin about section',
-		];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$tagsExpected                     = [];
+		$sectionsExpected                 = [];
 		$response                         = [
-			'name'                     => $nameExpected,
-			'fullSlug'                 => $fullSlugExpected,
-			'shortSlug'                => $shortSlugExpected,
-			'version'                  => $versionExpected,
-			'viewUrl'                  => $viewURLExpected,
-			'downloadUrl'              => $downloadURLExpected,
-			'tested'                   => $testedExpected,
-			'stable'                   => $stableExpected,
-			'tags'                     => $tagsExpected,
-			'author'                   => $authorExpected,
-			'authorUrl'                => $authorURLExpected,
-			'license'                  => $licenseExpected,
-			'licenseUrl'               => $licenseURLExpected,
-			'description'              => $descriptionExpected,
-			'shortDescription'         => $shortDescriptionExpected,
-			'requiresWordPressVersion' => $requiresWordPressVersionExpected,
-			'requiresPHPVersion'       => $requiresPHPVersionExpected,
-			'textDomain'               => $textDomainExpected,
-			'domainPath'               => $domainPathExpected,
-			'icons'                    => $iconsExpected,
-			'banners'                  => $bannersExpected,
-			'bannersRtl'               => $bannersRtlExpected,
-			'requiresPlugins'          => $requiresPluginsExpected,
-			'sections'                 => $sectionsExpected,
-			'network'                  => $networkExpected,
+			'Name'            => $nameExpected,
+			'PluginURI'       => $viewURLExpected,
+			'Version'         => $versionExpected,
+			'Description'     => $shortDescriptionExpected,
+			'Author'          => $authorExpected,
+			'AuthorURI'       => $authorURLExpected,
+			'TextDomain'      => $textDomainExpected,
+			'DomainPath'      => $domainPathExpected,
+			'Network'         => $networkActualRaw,
+			'RequiresWP'      => $requiresWordPressVersionExpected,
+			'RequiresPHP'     => $requiresPHPVersionExpected,
+			'UpdateURI'       => $downloadURLExpected,
+			'RequiresPlugins' => $requiresPluginsActualRaw,
 		];
-		$sut                              = new PluginPackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new PluginPackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
@@ -142,7 +87,7 @@ class PluginPackageMetaValueTest extends TestCase {
 		$this->assertEquals( $domainPathExpected, $sut->getDomainPath() );
 		$this->assertEquals( $iconsExpected, $sut->getIcons() );
 		$this->assertEquals( $bannersExpected, $sut->getBanners() );
-		$this->assertEquals( $bannersRtlExpected, $sut->getBannersRtl() );
+		$this->assertEquals( $bannersRTLExpected, $sut->getBannersRTL() );
 		$this->assertEquals( $networkExpected, $sut->getNetwork() );
 		$this->assertEquals( $requiresWordPressVersionExpected, $sut->getRequiresWordPressVersion() );
 		$this->assertEquals( $requiresPHPVersionExpected, $sut->getRequiresPHPVersion() );
@@ -162,6 +107,7 @@ class PluginPackageMetaValueTest extends TestCase {
 	 * @return void
 	 */
 	public function testJSONEncodeAndDecode(): void {
+
 		$nameExpected                     = 'Test Plugin';
 		$fullSlugExpected                 = 'test-plugin/test-plugin.php';
 		$shortSlugExpected                = 'test-plugin';
@@ -172,62 +118,42 @@ class PluginPackageMetaValueTest extends TestCase {
 		$authorURLExpected                = 'https://codekaizen.net/team/andrew-dawes';
 		$textDomainExpected               = 'test-plugin';
 		$domainPathExpected               = '/languages';
-		$iconsExpected                    = [
-			'1x'  => 'https://example.com/icon-128x128.png',
-			'2x'  => 'https://example.com/icon-256x256.png',
-			'svg' => 'https://example.com/icon.svg',
-		];
-		$bannersExpected                  = [
-			'1x' => 'https://example.com/banner-772x250.png',
-			'2x' => 'https://example.com/banner-1544x500.png',
-		];
-		$bannersRtlExpected               = [
-			'1x' => 'https://example.com/banner-rtl-772x250.png',
-			'2x' => 'https://example.com/banner-rtl-1544x500.png',
-		];
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
+		$networkActualRaw                 = 'true';
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
 		$requiresPHPVersionExpected       = '8.2.1';
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
-		$testedExpected                   = '6.8.2';
-		$stableExpected                   = '6.8.2';
+		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
-		$tagsExpected                     = [ 'tag1', 'tag2', 'tag3' ];
-		$licenseExpected                  = 'GPL v2 or later';
-		$licenseURLExpected               = 'https://www.gnu.org/licenses/gpl-2.0.html';
-		$descriptionExpected              = 'This is a long description of the plugin';
-		$sectionsExpected                 = [
-			'changelog' => 'changed',
-			'about'     => 'this is a plugin about section',
-		];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$tagsExpected                     = [];
+		$sectionsExpected                 = [];
 		$response                         = [
-			'name'                     => $nameExpected,
-			'fullSlug'                 => $fullSlugExpected,
-			'shortSlug'                => $shortSlugExpected,
-			'version'                  => $versionExpected,
-			'viewUrl'                  => $viewURLExpected,
-			'downloadUrl'              => $downloadURLExpected,
-			'tested'                   => $testedExpected,
-			'stable'                   => $stableExpected,
-			'tags'                     => $tagsExpected,
-			'author'                   => $authorExpected,
-			'authorUrl'                => $authorURLExpected,
-			'license'                  => $licenseExpected,
-			'licenseUrl'               => $licenseURLExpected,
-			'description'              => $descriptionExpected,
-			'shortDescription'         => $shortDescriptionExpected,
-			'requiresWordPressVersion' => $requiresWordPressVersionExpected,
-			'requiresPHPVersion'       => $requiresPHPVersionExpected,
-			'textDomain'               => $textDomainExpected,
-			'domainPath'               => $domainPathExpected,
-			'icons'                    => $iconsExpected,
-			'banners'                  => $bannersExpected,
-			'bannersRtl'               => $bannersRtlExpected,
-			'requiresPlugins'          => $requiresPluginsExpected,
-			'sections'                 => $sectionsExpected,
-			'network'                  => $networkExpected,
+			'Name'            => $nameExpected,
+			'PluginURI'       => $viewURLExpected,
+			'Version'         => $versionExpected,
+			'Description'     => $shortDescriptionExpected,
+			'Author'          => $authorExpected,
+			'AuthorURI'       => $authorURLExpected,
+			'TextDomain'      => $textDomainExpected,
+			'DomainPath'      => $domainPathExpected,
+			'Network'         => $networkActualRaw,
+			'RequiresWP'      => $requiresWordPressVersionExpected,
+			'RequiresPHP'     => $requiresPHPVersionExpected,
+			'UpdateURI'       => $downloadURLExpected,
+			'RequiresPlugins' => $requiresPluginsActualRaw,
 		];
-		$sut                              = new PluginPackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new PluginPackageMetaValue( $response, $slugParser );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$encoded = json_encode( $sut );
 		$this->assertIsString( $encoded );
@@ -258,7 +184,7 @@ class PluginPackageMetaValueTest extends TestCase {
 		$this->assertArrayHasKey( 'banners', $decoded );
 		$this->assertEquals( $bannersExpected, $decoded['banners'] );
 		$this->assertArrayHasKey( 'bannersRtl', $decoded );
-		$this->assertEquals( $bannersRtlExpected, $decoded['bannersRtl'] );
+		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRtl'] );
 		$this->assertArrayHasKey( 'network', $decoded );
 		$this->assertEquals( $networkExpected, $decoded['network'] );
 		$this->assertArrayHasKey( 'requiresWordPressVersion', $decoded );
@@ -295,55 +221,54 @@ class PluginPackageMetaValueTest extends TestCase {
 		$shortSlugExpected                = 'test-plugin';
 		$viewURLExpected                  = null;
 		$versionExpected                  = null;
-		$shortDescriptionExpected         = null;
+		$downloadURLExpected              = null;
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$tagsExpected                     = [];
 		$authorExpected                   = null;
 		$authorURLExpected                = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
+		$shortDescriptionExpected         = null;
+		$requiresWordPressVersionExpected = null;
+		$requiresPHPVersionExpected       = null;
 		$textDomainExpected               = null;
 		$domainPathExpected               = null;
 		$iconsExpected                    = [];
 		$bannersExpected                  = [];
 		$bannersRtlExpected               = [];
-		$networkExpected                  = false;
-		$requiresWordPressVersionExpected = null;
-		$requiresPHPVersionExpected       = null;
-		$downloadURLExpected              = null;
-		$testedExpected                   = null;
-		$stableExpected                   = null;
-		$requiresPluginsExpected          = [];
 		$tagsExpected                     = [];
-		$licenseExpected                  = null;
-		$licenseURLExpected               = null;
-		$descriptionExpected              = null;
 		$sectionsExpected                 = [];
 		$response                         = [
-			'name'      => $nameExpected,
-			'fullSlug'  => $fullSlugExpected,
-			'shortSlug' => $shortSlugExpected,
+			'Name' => $nameExpected,
 		];
-		$sut                              = new PluginPackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new PluginPackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
-		$this->assertEquals( $viewURLExpected, $sut->getViewURL() );
 		$this->assertEquals( $versionExpected, $sut->getVersion() );
-		$this->assertEquals( $shortDescriptionExpected, $sut->getShortDescription() );
+		$this->assertEquals( $viewURLExpected, $sut->getViewURL() );
+		$this->assertEquals( $downloadURLExpected, $sut->getDownloadURL() );
+		$this->assertEquals( $testedExpected, $sut->getTested() );
+		$this->assertEquals( $stableExpected, $sut->getStable() );
+		$this->assertEquals( $tagsExpected, $sut->getTags() );
 		$this->assertEquals( $authorExpected, $sut->getAuthor() );
 		$this->assertEquals( $authorURLExpected, $sut->getAuthorURL() );
+		$this->assertEquals( $licenseExpected, $sut->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $sut->getLicenseURL() );
+		$this->assertEquals( $shortDescriptionExpected, $sut->getShortDescription() );
+		$this->assertEquals( $descriptionExpected, $sut->getDescription() );
+		$this->assertEquals( $requiresWordPressVersionExpected, $sut->getRequiresWordPressVersion() );
+		$this->assertEquals( $requiresPHPVersionExpected, $sut->getRequiresPHPVersion() );
 		$this->assertEquals( $textDomainExpected, $sut->getTextDomain() );
 		$this->assertEquals( $domainPathExpected, $sut->getDomainPath() );
 		$this->assertEquals( $iconsExpected, $sut->getIcons() );
 		$this->assertEquals( $bannersExpected, $sut->getBanners() );
 		$this->assertEquals( $bannersRtlExpected, $sut->getBannersRtl() );
-		$this->assertEquals( $networkExpected, $sut->getNetwork() );
-		$this->assertEquals( $requiresWordPressVersionExpected, $sut->getRequiresWordPressVersion() );
-		$this->assertEquals( $requiresPHPVersionExpected, $sut->getRequiresPHPVersion() );
-		$this->assertEquals( $downloadURLExpected, $sut->getDownloadURL() );
-		$this->assertEquals( $requiresPluginsExpected, $sut->getRequiresPlugins() );
-		$this->assertEquals( $testedExpected, $sut->getTested() );
-		$this->assertEquals( $stableExpected, $sut->getStable() );
-		$this->assertEquals( $licenseExpected, $sut->getLicense() );
-		$this->assertEquals( $licenseURLExpected, $sut->getLicenseURL() );
-		$this->assertEquals( $descriptionExpected, $sut->getDescription() );
 		$this->assertEquals( $tagsExpected, $sut->getTags() );
 		$this->assertEquals( $sectionsExpected, $sut->getSections() );
 	}

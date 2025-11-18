@@ -1,8 +1,8 @@
 <?php
 /**
- * Local Theme Package Meta Provider Test
+ * Local Theme Package Meta Value Test
  *
- * Tests for the sut that reads and extracts metadata from local theme files.
+ * Tests for the value that reads and extracts metadata from local theme files.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta
  * @since 1.0.0
@@ -11,65 +11,30 @@
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
-use Mockery\MockInterface;
 
 /**
  * Tests for the theme package metadata sut implementation.
  *
  * @since 1.0.0
  */
-class ThemePackageMetaProviderTest extends TestCase {
-
-	/**
-	 * Undocumented variable
-	 *
-	 * @var (LoggerInterface&MockInterface)|null
-	 */
-	protected ?LoggerInterface $logger;
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->logger = Mockery::mock( LoggerInterface::class );
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		Mockery::close();
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return LoggerInterface&MockInterface
-	 */
-	protected function getLogger(): LoggerInterface {
-		self::assertNotNull( $this->logger );
-		return $this->logger;
-	}
+class ThemePackageMetaValueTest extends TestCase {
 
 	/**
 	 * Tests getName() extracts the correct plugin name from the My Basics plugin.
 	 *
 	 * @return void
 	 */
-	public function testGetNameFromThemeFabledSunset(): void {
+	public function testAllPropertiesFromThemeFabledSunset(): void {
 		$nameExpected                     = 'Test Theme';
 		$fullSlugExpected                 = 'test-theme/style.css';
 		$shortSlugExpected                = 'test-theme';
 		$versionExpected                  = '3.0.1';
 		$viewURLExpected                  = 'https://codekaizen.net';
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
+		$tagsActualRaw                    = 'awesome,cool,test';
 		$tagsExpected                     = [
 			'awesome',
 			'cool',
@@ -84,51 +49,34 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$statusExpected                   = 'publish';
 		$textDomainExpected               = 'test-theme';
 		$domainPathExpected               = '/languages';
-		$iconsExpected                    = [
-			'1x'  => 'https://example.com/icon-128x128.png',
-			'2x'  => 'https://example.com/icon-256x256.png',
-			'svg' => 'https://example.com/icon.svg',
-		];
-		$bannersExpected                  = [
-			'1x' => 'https://example.com/banner-772x250.png',
-			'2x' => 'https://example.com/banner-1544x500.png',
-		];
-		$bannersRtlExpected               = [
-			'1x' => 'https://example.com/banner-rtl-772x250.png',
-			'2x' => 'https://example.com/banner-rtl-1544x500.png',
-		];
-		$testedExpected                   = '6.8.2';
-		$stableExpected                   = '6.8.2';
-		$licenseExpected                  = 'GPL v2 or later';
-		$licenseURLExpected               = 'https://www.gnu.org/licenses/gpl-2.0.html';
-		$descriptionExpected              = 'A longer description.';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
 		$response                         = [
-			'name'                     => $nameExpected,
-			'fullSlug'                 => $fullSlugExpected,
-			'shortSlug'                => $shortSlugExpected,
-			'version'                  => $versionExpected,
-			'viewUrl'                  => $viewURLExpected,
-			'downloadUrl'              => $downloadURLExpected,
-			'tested'                   => $testedExpected,
-			'stable'                   => $stableExpected,
-			'tags'                     => $tagsExpected,
-			'author'                   => $authorExpected,
-			'authorUrl'                => $authorURLExpected,
-			'license'                  => $licenseExpected,
-			'licenseUrl'               => $licenseURLExpected,
-			'description'              => $descriptionExpected,
-			'shortDescription'         => $shortDescriptionExpected,
-			'requiresWordPressVersion' => $requiresWordPressVersionExpected,
-			'requiresPHPVersion'       => $requiresPHPVersionExpected,
-			'textDomain'               => $textDomainExpected,
-			'domainPath'               => $domainPathExpected,
-			'icons'                    => $iconsExpected,
-			'banners'                  => $bannersExpected,
-			'bannersRtl'               => $bannersRtlExpected,
-			'template'                 => $templateExpected,
-			'status'                   => $statusExpected,
+			'Name'        => $nameExpected,
+			'ThemeURI'    => $viewURLExpected,
+			'Description' => $shortDescriptionExpected,
+			'Author'      => $authorExpected,
+			'AuthorURI'   => $authorURLExpected,
+			'Version'     => $versionExpected,
+			'Template'    => $templateExpected,
+			'Status'      => $statusExpected,
+			'Tags'        => $tagsActualRaw,
+			'TextDomain'  => $textDomainExpected,
+			'DomainPath'  => $domainPathExpected,
+			'RequiresWP'  => $requiresWordPressVersionExpected,
+			'RequiresPHP' => $requiresPHPVersionExpected,
+			'UpdateURI'   => $downloadURLExpected,
 		];
-		$sut                              = new ThemePackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new ThemePackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
@@ -152,10 +100,10 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertEquals( $domainPathExpected, $sut->getDomainPath() );
 		$this->assertEquals( $iconsExpected, $sut->getIcons() );
 		$this->assertEquals( $bannersExpected, $sut->getBanners() );
-		$this->assertEquals( $bannersRtlExpected, $sut->getBannersRtl() );
+		$this->assertEquals( $bannersRTLExpected, $sut->getBannersRTL() );
 	}
 	/**
-	 * Test
+	 * Undocumented function.
 	 *
 	 * @return void
 	 */
@@ -166,6 +114,7 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$versionExpected                  = '3.0.1';
 		$viewURLExpected                  = 'https://codekaizen.net';
 		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
+		$tagsActualRaw                    = 'awesome,cool,test';
 		$tagsExpected                     = [
 			'awesome',
 			'cool',
@@ -180,51 +129,34 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$statusExpected                   = 'publish';
 		$textDomainExpected               = 'test-theme';
 		$domainPathExpected               = '/languages';
-		$iconsExpected                    = [
-			'1x'  => 'https://example.com/icon-128x128.png',
-			'2x'  => 'https://example.com/icon-256x256.png',
-			'svg' => 'https://example.com/icon.svg',
-		];
-		$bannersExpected                  = [
-			'1x' => 'https://example.com/banner-772x250.png',
-			'2x' => 'https://example.com/banner-1544x500.png',
-		];
-		$bannersRtlExpected               = [
-			'1x' => 'https://example.com/banner-rtl-772x250.png',
-			'2x' => 'https://example.com/banner-rtl-1544x500.png',
-		];
-		$testedExpected                   = '6.8.2';
-		$stableExpected                   = '6.8.2';
-		$licenseExpected                  = 'GPL v2 or later';
-		$licenseURLExpected               = 'https://www.gnu.org/licenses/gpl-2.0.html';
-		$descriptionExpected              = 'A longer description.';
+		$iconsExpected                    = [];
+		$bannersExpected                  = [];
+		$bannersRTLExpected               = [];
+		$testedExpected                   = null;
+		$stableExpected                   = null;
+		$licenseExpected                  = null;
+		$licenseURLExpected               = null;
+		$descriptionExpected              = null;
 		$response                         = [
-			'name'                     => $nameExpected,
-			'fullSlug'                 => $fullSlugExpected,
-			'shortSlug'                => $shortSlugExpected,
-			'version'                  => $versionExpected,
-			'viewUrl'                  => $viewURLExpected,
-			'downloadUrl'              => $downloadURLExpected,
-			'tested'                   => $testedExpected,
-			'stable'                   => $stableExpected,
-			'tags'                     => $tagsExpected,
-			'author'                   => $authorExpected,
-			'authorUrl'                => $authorURLExpected,
-			'license'                  => $licenseExpected,
-			'licenseUrl'               => $licenseURLExpected,
-			'description'              => $descriptionExpected,
-			'shortDescription'         => $shortDescriptionExpected,
-			'requiresWordPressVersion' => $requiresWordPressVersionExpected,
-			'requiresPHPVersion'       => $requiresPHPVersionExpected,
-			'textDomain'               => $textDomainExpected,
-			'domainPath'               => $domainPathExpected,
-			'icons'                    => $iconsExpected,
-			'banners'                  => $bannersExpected,
-			'bannersRtl'               => $bannersRtlExpected,
-			'template'                 => $templateExpected,
-			'status'                   => $statusExpected,
+			'Name'        => $nameExpected,
+			'ThemeURI'    => $viewURLExpected,
+			'Description' => $shortDescriptionExpected,
+			'Author'      => $authorExpected,
+			'AuthorURI'   => $authorURLExpected,
+			'Version'     => $versionExpected,
+			'Template'    => $templateExpected,
+			'Status'      => $statusExpected,
+			'Tags'        => $tagsActualRaw,
+			'TextDomain'  => $textDomainExpected,
+			'DomainPath'  => $domainPathExpected,
+			'RequiresWP'  => $requiresWordPressVersionExpected,
+			'RequiresPHP' => $requiresPHPVersionExpected,
+			'UpdateURI'   => $downloadURLExpected,
 		];
-		$sut                              = new ThemePackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new ThemePackageMetaValue( $response, $slugParser );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$encoded = json_encode( $sut );
 		$this->assertIsString( $encoded );
@@ -277,7 +209,7 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$this->assertArrayHasKey( 'banners', $decoded );
 		$this->assertEquals( $bannersExpected, $decoded['banners'] );
 		$this->assertArrayHasKey( 'bannersRtl', $decoded );
-		$this->assertEquals( $bannersRtlExpected, $decoded['bannersRtl'] );
+		$this->assertEquals( $bannersRTLExpected, $decoded['bannersRtl'] );
 	}
 	/**
 	 * Undocumented function
@@ -310,11 +242,12 @@ class ThemePackageMetaProviderTest extends TestCase {
 		$bannersExpected                  = [];
 		$bannersRtlExpected               = [];
 		$response                         = [
-			'name'      => $nameExpected,
-			'fullSlug'  => $fullSlugExpected,
-			'shortSlug' => $shortSlugExpected,
+			'Name' => $nameExpected,
 		];
-		$sut                              = new ThemePackageMetaValue( $response, $this->getLogger() );
+		$slugParser                       = Mockery::mock( SlugValueContract::class );
+		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
+		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
+		$sut = new ThemePackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );

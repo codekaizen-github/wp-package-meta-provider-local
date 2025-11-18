@@ -10,8 +10,9 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Accessor\FileContentAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
+use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
+use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
 use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -44,9 +45,9 @@ class SelectHeadersAccessorTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentAccessor( $filePath );
-		$parser   = new SelectHeadersAccessor( $reader, $headers );
-		$parsed   = $parser->get();
+		$reader   = new FileReader( $filePath );
+		$parser   = new HeadersParser( $headers );
+		$parsed   = $parser->parse( $reader->read() );
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'My Basics Plugin', $parsed['Name'] );
 		$this->assertArrayHasKey( 'PluginURI', $parsed );
@@ -73,9 +74,9 @@ class SelectHeadersAccessorTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		$reader   = new FileContentAccessor( $filePath );
-		$parser   = new SelectHeadersAccessor( $reader, $headers );
-		$parsed   = $parser->get();
+		$reader   = new FileReader( $filePath );
+		$parser   = new HeadersParser( $headers );
+		$parsed   = $parser->parse( $reader->read() );
 		$this->assertArrayNotHasKey( 'Name', $parsed );
 	}
 	/**
@@ -102,9 +103,9 @@ class SelectHeadersAccessorTest extends TestCase {
 			// Legacy header that has been replaced by Network.
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/minimum-headers-plugin.php';
-		$reader   = new FileContentAccessor( $filePath );
-		$parser   = new SelectHeadersAccessor( $reader, $headers );
-		$parsed   = $parser->get();
+		$reader   = new FileReader( $filePath );
+		$parser   = new HeadersParser( $headers );
+		$parsed   = $parser->parse( $reader->read() );
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Minimum Headers Plugin', $parsed['Name'] );
 		$this->assertArrayNotHasKey( 'PluginURI', $parsed );
@@ -131,9 +132,9 @@ class SelectHeadersAccessorTest extends TestCase {
 			'RequiresPlugins' => 'Requires Plugins',
 		];
 		$filePath = FixturePathHelper::getPathForPlugin() . '/plugin-name.php';
-		$reader   = new FileContentAccessor( $filePath );
-		$parser   = new SelectHeadersAccessor( $reader, $headers );
-		$parsed   = $parser->get();
+		$reader   = new FileReader( $filePath );
+		$parser   = new HeadersParser( $headers );
+		$parsed   = $parser->parse( $reader->read() );
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Plugin Name', $parsed['Name'] );
 	}
@@ -160,9 +161,9 @@ class SelectHeadersAccessorTest extends TestCase {
 			'UpdateURI'   => 'Update URI',
 		];
 		$filePath = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		$reader   = new FileContentAccessor( $filePath );
-		$parser   = new SelectHeadersAccessor( $reader, $headers );
-		$parsed   = $parser->get();
+		$reader   = new FileReader( $filePath );
+		$parser   = new HeadersParser( $headers );
+		$parsed   = $parser->parse( $reader->read() );
 		$this->assertArrayHasKey( 'Name', $parsed );
 		$this->assertEquals( 'Fabled Sunset', $parsed['Name'] );
 		$this->assertArrayHasKey( 'ThemeURI', $parsed );
