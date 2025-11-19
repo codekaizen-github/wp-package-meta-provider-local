@@ -10,7 +10,6 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Accessor\SelectHeadersAccessor;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
 use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;

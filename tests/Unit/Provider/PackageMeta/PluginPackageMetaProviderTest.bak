@@ -2,7 +2,7 @@
 /**
  * Local Plugin Package Meta Provider Test
  *
- * Tests for the provider that reads and extracts metadata from local plugin files.
+ * Tests for the sut that reads and extracts metadata from local plugin files.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta
  * @since 1.0.0
@@ -12,12 +12,14 @@ namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Provider\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Accessor\AssociativeArrayStringToStringAccessorContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\SlugParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Provider\PackageMeta\PluginPackageMetaProvider;
+use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for the plugin package metadata provider implementation.
+ * Tests for the plugin package metadata sut implementation.
  *
  * @since 1.0.0
  */
@@ -46,7 +48,7 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
 		$requiresPHPVersionExpected       = '8.2.1';
-		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
+		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
 		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
 		$testedExpected                   = null;
@@ -71,37 +73,37 @@ class PluginPackageMetaProviderTest extends TestCase {
 			'UpdateURI'       => $downloadURLExpected,
 			'RequiresPlugins' => $requiresPluginsActualRaw,
 		];
-		$client                           = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
-		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$reader                           = Mockery::mock( ReaderContract::class );
+		$reader->shouldReceive( 'read' )->with()->andReturn( $response );
 		$slugParser = Mockery::mock( SlugParserContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$provider = new PluginPackageMetaProvider( $slugParser, $client );
-		$this->assertEquals( $nameExpected, $provider->getName() );
-		$this->assertEquals( $fullSlugExpected, $provider->getFullSlug() );
-		$this->assertEquals( $shortSlugExpected, $provider->getShortSlug() );
-		$this->assertEquals( $viewURLExpected, $provider->getViewURL() );
-		$this->assertEquals( $versionExpected, $provider->getVersion() );
-		$this->assertEquals( $shortDescriptionExpected, $provider->getShortDescription() );
-		$this->assertEquals( $authorExpected, $provider->getAuthor() );
-		$this->assertEquals( $authorURLExpected, $provider->getAuthorURL() );
-		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
-		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
-		$this->assertEquals( $iconsExpected, $provider->getIcons() );
-		$this->assertEquals( $bannersExpected, $provider->getBanners() );
-		$this->assertEquals( $bannersRTLExpected, $provider->getBannersRTL() );
-		$this->assertEquals( $networkExpected, $provider->getNetwork() );
-		$this->assertEquals( $requiresWordPressVersionExpected, $provider->getRequiresWordPressVersion() );
-		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
-		$this->assertEquals( $downloadURLExpected, $provider->getDownloadURL() );
-		$this->assertEquals( $requiresPluginsExpected, $provider->getRequiresPlugins() );
-		$this->assertEquals( $testedExpected, $provider->getTested() );
-		$this->assertEquals( $stableExpected, $provider->getStable() );
-		$this->assertEquals( $licenseExpected, $provider->getLicense() );
-		$this->assertEquals( $licenseURLExpected, $provider->getLicenseURL() );
-		$this->assertEquals( $descriptionExpected, $provider->getDescription() );
-		$this->assertEquals( $tagsExpected, $provider->getTags() );
-		$this->assertEquals( $sectionsExpected, $provider->getSections() );
+		$sut = new PluginPackageMetaValueService()
+		$this->assertEquals( $nameExpected, $sut->getName() );
+		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
+		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
+		$this->assertEquals( $viewURLExpected, $sut->getViewURL() );
+		$this->assertEquals( $versionExpected, $sut->getVersion() );
+		$this->assertEquals( $shortDescriptionExpected, $sut->getShortDescription() );
+		$this->assertEquals( $authorExpected, $sut->getAuthor() );
+		$this->assertEquals( $authorURLExpected, $sut->getAuthorURL() );
+		$this->assertEquals( $textDomainExpected, $sut->getTextDomain() );
+		$this->assertEquals( $domainPathExpected, $sut->getDomainPath() );
+		$this->assertEquals( $iconsExpected, $sut->getIcons() );
+		$this->assertEquals( $bannersExpected, $sut->getBanners() );
+		$this->assertEquals( $bannersRTLExpected, $sut->getBannersRTL() );
+		$this->assertEquals( $networkExpected, $sut->getNetwork() );
+		$this->assertEquals( $requiresWordPressVersionExpected, $sut->getRequiresWordPressVersion() );
+		$this->assertEquals( $requiresPHPVersionExpected, $sut->getRequiresPHPVersion() );
+		$this->assertEquals( $downloadURLExpected, $sut->getDownloadURL() );
+		$this->assertEquals( $requiresPluginsExpected, $sut->getRequiresPlugins() );
+		$this->assertEquals( $testedExpected, $sut->getTested() );
+		$this->assertEquals( $stableExpected, $sut->getStable() );
+		$this->assertEquals( $licenseExpected, $sut->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $sut->getLicenseURL() );
+		$this->assertEquals( $descriptionExpected, $sut->getDescription() );
+		$this->assertEquals( $tagsExpected, $sut->getTags() );
+		$this->assertEquals( $sectionsExpected, $sut->getSections() );
 	}
 	/**
 	 * Test
@@ -127,7 +129,7 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$networkExpected                  = true;
 		$requiresWordPressVersionExpected = '6.8.2';
 		$requiresPHPVersionExpected       = '8.2.1';
-		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-provider-local';
+		$downloadURLExpected              = 'https://github.com/codekaizen-github/wp-package-meta-sut-local';
 		$requiresPluginsActualRaw         = 'akismet,hello-dolly';
 		$requiresPluginsExpected          = [ 'akismet', 'hello-dolly' ];
 		$testedExpected                   = null;
@@ -152,14 +154,14 @@ class PluginPackageMetaProviderTest extends TestCase {
 			'UpdateURI'       => $downloadURLExpected,
 			'RequiresPlugins' => $requiresPluginsActualRaw,
 		];
-		$client                           = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
-		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$reader                           = Mockery::mock( ReaderContract::class );
+		$reader->shouldReceive( 'read' )->with()->andReturn( $response );
 		$slugParser = Mockery::mock( SlugParserContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$provider = new PluginPackageMetaProvider( $slugParser, $client );
+		$sut = new PluginPackageMetaProvider( $slugParser, $reader );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
-		$encoded = json_encode( $provider );
+		$encoded = json_encode( $sut );
 		$this->assertIsString( $encoded );
 		$decoded = json_decode( $encoded, true );
 		$this->assertIsArray( $decoded );
@@ -247,37 +249,35 @@ class PluginPackageMetaProviderTest extends TestCase {
 		$response                         = [
 			'Name' => $nameExpected,
 		];
-		$metaAnnotationKeyAccessor        = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
-		$metaAnnotationKeyAccessor->shouldReceive( 'get' )->with()->andReturn( $response );
-		$client = Mockery::mock( AssociativeArrayStringToStringAccessorContract::class );
-		$client->shouldReceive( 'get' )->with()->andReturn( $response );
+		$reader                           = Mockery::mock( ReaderContract::class );
+		$reader->shouldReceive( 'read' )->with()->andReturn( $response );
 		$slugParser = Mockery::mock( SlugParserContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$provider = new PluginPackageMetaProvider( $slugParser, $client );
-		$this->assertEquals( $nameExpected, $provider->getName() );
-		$this->assertEquals( $fullSlugExpected, $provider->getFullSlug() );
-		$this->assertEquals( $shortSlugExpected, $provider->getShortSlug() );
-		$this->assertEquals( $versionExpected, $provider->getVersion() );
-		$this->assertEquals( $viewURLExpected, $provider->getViewURL() );
-		$this->assertEquals( $downloadURLExpected, $provider->getDownloadURL() );
-		$this->assertEquals( $testedExpected, $provider->getTested() );
-		$this->assertEquals( $stableExpected, $provider->getStable() );
-		$this->assertEquals( $tagsExpected, $provider->getTags() );
-		$this->assertEquals( $authorExpected, $provider->getAuthor() );
-		$this->assertEquals( $authorURLExpected, $provider->getAuthorURL() );
-		$this->assertEquals( $licenseExpected, $provider->getLicense() );
-		$this->assertEquals( $licenseURLExpected, $provider->getLicenseURL() );
-		$this->assertEquals( $shortDescriptionExpected, $provider->getShortDescription() );
-		$this->assertEquals( $descriptionExpected, $provider->getDescription() );
-		$this->assertEquals( $requiresWordPressVersionExpected, $provider->getRequiresWordPressVersion() );
-		$this->assertEquals( $requiresPHPVersionExpected, $provider->getRequiresPHPVersion() );
-		$this->assertEquals( $textDomainExpected, $provider->getTextDomain() );
-		$this->assertEquals( $domainPathExpected, $provider->getDomainPath() );
-		$this->assertEquals( $iconsExpected, $provider->getIcons() );
-		$this->assertEquals( $bannersExpected, $provider->getBanners() );
-		$this->assertEquals( $bannersRtlExpected, $provider->getBannersRtl() );
-		$this->assertEquals( $tagsExpected, $provider->getTags() );
-		$this->assertEquals( $sectionsExpected, $provider->getSections() );
+		$sut = new PluginPackageMetaProvider( $slugParser, $reader );
+		$this->assertEquals( $nameExpected, $sut->getName() );
+		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
+		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
+		$this->assertEquals( $versionExpected, $sut->getVersion() );
+		$this->assertEquals( $viewURLExpected, $sut->getViewURL() );
+		$this->assertEquals( $downloadURLExpected, $sut->getDownloadURL() );
+		$this->assertEquals( $testedExpected, $sut->getTested() );
+		$this->assertEquals( $stableExpected, $sut->getStable() );
+		$this->assertEquals( $tagsExpected, $sut->getTags() );
+		$this->assertEquals( $authorExpected, $sut->getAuthor() );
+		$this->assertEquals( $authorURLExpected, $sut->getAuthorURL() );
+		$this->assertEquals( $licenseExpected, $sut->getLicense() );
+		$this->assertEquals( $licenseURLExpected, $sut->getLicenseURL() );
+		$this->assertEquals( $shortDescriptionExpected, $sut->getShortDescription() );
+		$this->assertEquals( $descriptionExpected, $sut->getDescription() );
+		$this->assertEquals( $requiresWordPressVersionExpected, $sut->getRequiresWordPressVersion() );
+		$this->assertEquals( $requiresPHPVersionExpected, $sut->getRequiresPHPVersion() );
+		$this->assertEquals( $textDomainExpected, $sut->getTextDomain() );
+		$this->assertEquals( $domainPathExpected, $sut->getDomainPath() );
+		$this->assertEquals( $iconsExpected, $sut->getIcons() );
+		$this->assertEquals( $bannersExpected, $sut->getBanners() );
+		$this->assertEquals( $bannersRtlExpected, $sut->getBannersRtl() );
+		$this->assertEquals( $tagsExpected, $sut->getTags() );
+		$this->assertEquals( $sectionsExpected, $sut->getSections() );
 	}
 }
