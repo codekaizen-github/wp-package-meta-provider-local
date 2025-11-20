@@ -14,12 +14,8 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\S
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
-use GuzzleHttp\Psr7\Uri;
-use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use Mockery;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use UnexpectedValueException;
 use Mockery\MockInterface;
