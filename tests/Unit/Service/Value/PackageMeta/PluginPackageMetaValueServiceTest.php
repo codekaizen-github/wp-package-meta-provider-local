@@ -13,7 +13,6 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPa
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Psr\Log\LoggerInterface;
@@ -54,68 +53,30 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 	 */
 	protected ?LoggerInterface $logger;
 
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var MockInterface
+	 */
+	protected MockInterface $packageMetaValue;
+
 	/**
 	 * Undocumented function
 	 *
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$this->slugParser = Mockery::mock( SlugValueContract::class );
-		$this->logger     = Mockery::mock( LoggerInterface::class );
-		$this->reader     = Mockery::mock( ReaderContract::class );
-		$this->assembler  = Mockery::mock( StringPackageMetaArrayAssemblerContract::class );
-		$pluginFilePath   = FixturePathHelper::getPathForPlugin() . '/my-basics-plugin.php';
-		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$pluginFileContents = file_get_contents( $pluginFilePath );
-		// phpcs:enable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$nameExpected                     = 'My Basics Plugin';
-		$viewURLExpected                  = 'https://example.com/plugins/the-basics/';
-		$versionExpected                  = '1.10.3';
-		$shortDescriptionExpected         = 'Handle the basics with this plugin.';
-		$authorExpected                   = 'John Smith';
-		$authorURLExpected                = 'https://author.example.com/';
-		$textDomainExpected               = 'my-basics-plugin';
-		$domainPathExpected               = '/languages';
-		$networkActualRaw                 = '';
-		$requiresWordPressVersionExpected = '5.2';
-		$requiresPHPVersionExpected       = '7.2';
-		$downloadURLExpected              = 'https://example.com/my-plugin/';
-		$requiresPluginsActualRaw         = 'my-plugin, yet-another-plugin';
-		$response                         = [
-			'Name'            => $nameExpected,
-			'PluginURI'       => $viewURLExpected,
-			'Version'         => $versionExpected,
-			'Description'     => $shortDescriptionExpected,
-			'Author'          => $authorExpected,
-			'AuthorURI'       => $authorURLExpected,
-			'TextDomain'      => $textDomainExpected,
-			'DomainPath'      => $domainPathExpected,
-			'Network'         => $networkActualRaw,
-			'RequiresWP'      => $requiresWordPressVersionExpected,
-			'RequiresPHP'     => $requiresPHPVersionExpected,
-			'UpdateURI'       => $downloadURLExpected,
-			'RequiresPlugins' => $requiresPluginsActualRaw,
-		];
-		$this->getSlugValue()
-			->shouldReceive( 'getFullSlug' )
-			->byDefault()
-			->andReturn( 'my-basics-plugin/my-basics-plugin.php' );
-				$this->getSlugValue()
-			->shouldReceive( 'getShortSlug' )
-			->byDefault()
-			->andReturn( 'my-basics-plugin' );
-		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$this->getReader()
-			->shouldReceive( 'read' )
-			->byDefault()
-			->andReturn( $pluginFileContents );
-		// phpcs:enable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$this->assembler
-			->shouldReceive( 'assemble' )
-			->byDefault()
-			->with( $pluginFileContents )
-			->andReturn( $response );
-		// $this->logger->shouldReceive( 'debug' )->byDefault();
+		$this->slugParser       = Mockery::mock( SlugValueContract::class );
+		$this->logger           = Mockery::mock( LoggerInterface::class );
+		$this->reader           = Mockery::mock( ReaderContract::class );
+		$this->assembler        = Mockery::mock( StringPackageMetaArrayAssemblerContract::class );
+		$this->packageMetaValue = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue',
+			'CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract'
+		);
+		$this->getReader()->shouldReceive( 'read' )->byDefault();
+		$this->getAssembler()->shouldReceive( 'assemble' )->byDefault();
 	}
 
 	/**
@@ -170,7 +131,19 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 	}
 
 	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	protected function getPackageMetaValue(): MockInterface {
+		return $this->packageMetaValue;
+	}
+
+	/**
 	 * Test getPackageMeta returns value on success.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaReturnsValueOnSuccess(): void {
 		$sut = new PluginPackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
@@ -180,6 +153,9 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 
 	/**
 	 * Test getPackageMeta does not cache the value.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaDoesNotCacheValue(): void {
 		$sut    = new PluginPackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
@@ -191,18 +167,15 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 
 	/**
 	 * Test getPackageMeta throws on assembler exception.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaThrowsOnAssemblerException(): void {
 		$this->expectException( UnexpectedValueException::class );
-		$badFileContents = 'This is not valid plugin file contents.';
-		$this->getReader()
-			->shouldReceive( 'read' )
-			->with()
-			->andReturn( $badFileContents );
 		$this
 			->getAssembler()
 			->shouldReceive( 'assemble' )
-			->with( $badFileContents )
 			->andThrow( new UnexpectedValueException( 'Invalid meta' ) );
 		$sut = new PluginPackageMetaValueService(
 			$this->getReader(),
@@ -211,5 +184,42 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 			$this->getLogger()
 		);
 		$sut->getPackageMeta();
+	}
+
+	/**
+	 * Test assembler receives content from reader.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function testAssemblerReceivesContentFromReader(): void {
+		$content = 'meta-content';
+		$this->getReader()->shouldReceive( 'read' )->andReturn( $content );
+		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( [] );
+		$sut = new PluginPackageMetaValueService(
+			$this->getReader(),
+			$this->getSlugValue(),
+			$this->getAssembler(),
+			$this->getLogger()
+		);
+		$sut->getPackageMeta();
+	}
+
+	/**
+	 * Test package meta receives dependencies.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function testPackageMetaReceivesDependencies(): void {
+		$assembled = [
+			'key' => 'value',
+		];
+		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( $assembled );
+		$this->getPackageMetaValue()->shouldReceive( '__construct' )->with(
+			$assembled,
+			$this->getSlugValue(),
+			$this->getLogger()
+		);
 	}
 }

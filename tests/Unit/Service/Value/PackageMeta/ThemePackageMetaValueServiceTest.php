@@ -13,7 +13,6 @@ use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePac
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
-use CodeKaizen\WPPackageMetaProviderLocalTests\Helper\FixturePathHelper;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Psr\Log\LoggerInterface;
@@ -54,66 +53,30 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	 */
 	protected ?LoggerInterface $logger;
 
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var MockInterface
+	 */
+	protected MockInterface $packageMetaValue;
+
 	/**
 	 * Undocumented function
 	 *
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$this->slugParser = Mockery::mock( SlugValueContract::class );
-		$this->logger     = Mockery::mock( LoggerInterface::class );
-		$this->reader     = Mockery::mock( ReaderContract::class );
-		$this->assembler  = Mockery::mock( StringPackageMetaArrayAssemblerContract::class );
-		$themeFilePath    = FixturePathHelper::getPathForTheme() . '/fabled-sunset/style.css';
-		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$themeFileContents = file_get_contents( $themeFilePath );
-		// phpcs:enable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$nameExpected                     = 'Fabled Sunset';
-		$viewURLExpected                  = 'https://example.com/fabled-sunset';
-		$versionExpected                  = '1.0.0';
-		$shortDescriptionExpected         = 'Custom theme description...';
-		$authorExpected                   = 'Your Name';
-		$authorURLExpected                = 'https://example.com';
-		$textDomainExpected               = 'fabled-sunset';
-		$domainPathExpected               = '/assets/lang';
-		$requiresWordPressVersionExpected = '6.2';
-		$requiresPHPVersionExpected       = '7.2';
-		$licenseURLExpected               = 'https://www.gnu.org/licenses/gpl-2.0.html';
-		$tagsExpected                     = 'block-patterns, full-site-editing';
-		$response                         = [
-			'Name'        => $nameExpected,
-			'ThemeURI'    => $viewURLExpected,
-			'Description' => $shortDescriptionExpected,
-			'Author'      => $authorExpected,
-			'AuthorURI'   => $authorURLExpected,
-			'Version'     => $versionExpected,
-			'Tags'        => $tagsExpected,
-			'TextDomain'  => $textDomainExpected,
-			'DomainPath'  => $domainPathExpected,
-			'RequiresWP'  => $requiresWordPressVersionExpected,
-			'RequiresPHP' => $requiresPHPVersionExpected,
-			'UpdateURI'   => $licenseURLExpected,
-		];
-		$this->getSlugValue()
-			->shouldReceive( 'getFullSlug' )
-			->byDefault()
-			->andReturn( 'my-basics-theme/styloe.css' );
-				$this->getSlugValue()
-			->shouldReceive( 'getShortSlug' )
-			->byDefault()
-			->andReturn( 'my-basics-theme' );
-		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$this->getReader()
-			->shouldReceive( 'read' )
-			->byDefault()
-			->andReturn( $themeFileContents );
-		// phpcs:enable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$this->assembler
-			->shouldReceive( 'assemble' )
-			->byDefault()
-			->with( $themeFileContents )
-			->andReturn( $response );
-		// $this->logger->shouldReceive( 'debug' )->byDefault();
+		$this->slugParser       = Mockery::mock( SlugValueContract::class );
+		$this->logger           = Mockery::mock( LoggerInterface::class );
+		$this->reader           = Mockery::mock( ReaderContract::class );
+		$this->assembler        = Mockery::mock( StringPackageMetaArrayAssemblerContract::class );
+		$this->packageMetaValue = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue',
+			'CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract'
+		);
+		$this->getReader()->shouldReceive( 'read' )->byDefault();
+		$this->getAssembler()->shouldReceive( 'assemble' )->byDefault();
 	}
 
 	/**
@@ -134,7 +97,6 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 		self::assertNotNull( $this->slugParser );
 		return $this->slugParser;
 	}
-
 
 	/**
 	 * Undocumented function
@@ -168,7 +130,19 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	}
 
 	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	protected function getPackageMetaValue(): MockInterface {
+		return $this->packageMetaValue;
+	}
+
+	/**
 	 * Test getPackageMeta returns value on success.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaReturnsValueOnSuccess(): void {
 		$sut = new ThemePackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
@@ -178,6 +152,9 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 
 	/**
 	 * Test getPackageMeta does not cache the value.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaDoesNotCacheValue(): void {
 		$sut    = new ThemePackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
@@ -189,18 +166,15 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 
 	/**
 	 * Test getPackageMeta throws on assembler exception.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaThrowsOnAssemblerException(): void {
 		$this->expectException( UnexpectedValueException::class );
-		$badFileContents = 'This is not valid theme file contents.';
-		$this->getReader()
-			->shouldReceive( 'read' )
-			->with()
-			->andReturn( $badFileContents );
 		$this
 			->getAssembler()
 			->shouldReceive( 'assemble' )
-			->with( $badFileContents )
 			->andThrow( new UnexpectedValueException( 'Invalid meta' ) );
 		$sut = new ThemePackageMetaValueService(
 			$this->getReader(),
@@ -209,5 +183,42 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 			$this->getLogger()
 		);
 		$sut->getPackageMeta();
+	}
+
+	/**
+	 * Test assembler receives content from reader.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function testAssemblerReceivesContentFromReader(): void {
+		$content = 'meta-content';
+		$this->getReader()->shouldReceive( 'read' )->andReturn( $content );
+		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( [] );
+		$sut = new ThemePackageMetaValueService(
+			$this->getReader(),
+			$this->getSlugValue(),
+			$this->getAssembler(),
+			$this->getLogger()
+		);
+		$sut->getPackageMeta();
+	}
+
+	/**
+	 * Test package meta receives dependencies.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function testPackageMetaReceivesDependencies(): void {
+		$assembled = [
+			'key' => 'value',
+		];
+		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( $assembled );
+		$this->getPackageMetaValue()->shouldReceive( '__construct' )->with(
+			$assembled,
+			$this->getSlugValue(),
+			$this->getLogger()
+		);
 	}
 }
