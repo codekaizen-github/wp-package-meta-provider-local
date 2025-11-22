@@ -86,7 +86,7 @@ class ResponsePackageMetaArrayAssemblerTest extends TestCase {
 		$content   = '';
 		$metaArray = [
 			'foo' => 'bar',
-			'baz' => 123,
+			'baz' => 'qux',
 		];
 		$parser    = $this->getParser();
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( $metaArray );
@@ -120,6 +120,22 @@ class ResponsePackageMetaArrayAssemblerTest extends TestCase {
 		$content = '';
 		$parser  = $this->getParser();
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( [ 123 => 'value' ] );
+		$logger = $this->getLogger();
+		$logger->shouldReceive( 'error' )->once();
+		$sut = new StringPackageMetaArrayAssembler( $parser, $logger );
+		$this->expectException( UnexpectedValueException::class );
+		$sut->assemble( $content );
+	}
+
+		/**
+		 * Undocumented function
+		 *
+		 * @return void
+		 */
+	public function testAssemblerThrowsUnexpectedValueExceptionOnParserReturningArrayWithNonStringValues(): void {
+		$content = '';
+		$parser  = $this->getParser();
+		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( [ 'asdf' => 123 ] );
 		$logger = $this->getLogger();
 		$logger->shouldReceive( 'error' )->once();
 		$sut = new StringPackageMetaArrayAssembler( $parser, $logger );

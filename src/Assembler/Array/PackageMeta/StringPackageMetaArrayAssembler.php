@@ -61,7 +61,8 @@ class StringPackageMetaArrayAssembler implements StringPackageMetaArrayAssembler
 			Validator::create(
 				new Rules\AllOf(
 					new Rules\ArrayType(),
-					new Rules\Call( 'array_keys', new Rules\Each( new Rules\StringType() ) )
+					new Rules\Call( 'array_keys', new Rules\Each( new Rules\StringType() ) ),
+					new Rules\Call( 'array_values', new Rules\Each( new Rules\StringType() ) )
 				)
 			)->check( $parsed );
 		} catch ( ValidationException $e ) {
