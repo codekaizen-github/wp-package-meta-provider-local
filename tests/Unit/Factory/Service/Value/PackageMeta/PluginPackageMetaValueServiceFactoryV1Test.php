@@ -1,0 +1,229 @@
+<?php
+/**
+ * Factory for PluginPackageMetaValueService instances.
+ *
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta
+ */
+
+namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta;
+
+use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\PluginPackageMetaValueServiceFactoryV1;
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Mockery;
+use Mockery\MockInterface;
+
+/**
+ * Undocumented class
+ */
+class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var ?MockInterface
+	 */
+	protected ?MockInterface $assembler;
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var ?MockInterface
+	 */
+	protected ?MockInterface $reader;
+
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var (LoggerInterface&MockInterface)|null
+	 */
+	protected ?LoggerInterface $logger;
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var (SlugValueContract&MockInterface)|null
+	 */
+	protected ?SlugValueContract $slugValue;
+
+	/**
+	 * Undocumented variable
+	 *
+	 * @var ?MockInterface
+	 */
+	protected ?MockInterface $service;
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	protected ?MockInterface $parser;
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	protected function setUp(): void {
+		// phpcs:disable Generic.Files.LineLength.TooLong
+		$this->assembler = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler',
+		);
+		// phpcs:enable Generic.Files.LineLength.TooLong
+		$this->reader    = Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader' );
+		$this->logger    = Mockery::mock( LoggerInterface::class );
+		$this->slugValue = Mockery::mock( SlugValueContract::class );
+		$this->parser    = Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser' );
+		// phpcs:disable Generic.Files.LineLength.TooLong
+		$this->service = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService',
+			'CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract'
+		);
+		// phpcs:enable Generic.Files.LineLength.TooLong
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	public function getAssembler(): MockInterface {
+		self::assertNotNull( $this->assembler );
+		return $this->assembler;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	public function getReader(): MockInterface {
+		self::assertNotNull( $this->reader );
+		return $this->reader;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return LoggerInterface&MockInterface
+	 */
+	protected function getLogger(): LoggerInterface&MockInterface {
+		self::assertNotNull( $this->logger );
+		return $this->logger;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return SlugValueContract&MockInterface
+	 */
+	protected function getSlugValue(): SlugValueContract&MockInterface {
+		self::assertNotNull( $this->slugValue );
+		return $this->slugValue;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	public function getParser(): MockInterface {
+		self::assertNotNull( $this->parser );
+		return $this->parser;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return MockInterface
+	 */
+	public function getService(): MockInterface {
+		self::assertNotNull( $this->service );
+		return $this->service;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @return void
+	 */
+	public function testCreateReturnsServiceInstanceWithDefaults() {
+		$sut = new PluginPackageMetaValueServiceFactoryV1(
+			'/path/to/meta/file',
+			$this->getSlugValue(),
+			$this->getLogger()
+		);
+		$this->getParser()->shouldReceive( '__construct' )
+			->with(
+				[
+					'Name'            => 'Plugin Name',
+					'PluginURI'       => 'Plugin URI',
+					'Version'         => 'Version',
+					'Description'     => 'Description',
+					'Author'          => 'Author',
+					'AuthorURI'       => 'Author URI',
+					'TextDomain'      => 'Text Domain',
+					'DomainPath'      => 'Domain Path',
+					'Network'         => 'Network',
+					'RequiresWP'      => 'Requires at least',
+					'RequiresPHP'     => 'Requires PHP',
+					'UpdateURI'       => 'Update URI',
+					'RequiresPlugins' => 'Requires Plugins',
+				]
+			)
+			->andReturnNull();
+		$this->getService()->shouldReceive( '__construct' );
+		// ->with(
+		// $this->getReader(),
+		// $this->getSlugValue(),
+		// $this->getAssembler(),
+		// $this->getLogger()
+		// );
+		// ->andReturnNull();
+		$service = $sut->create();
+		$this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @return void
+	 */
+	// public function testCreateReturnsServiceInstanceWithCustomLogger() {
+	// $logger  = Mockery::mock( LoggerInterface::class );
+	// $sut     = new PluginPackageMetaValueServiceFactoryV1(
+	// 'http://example.com/meta.json',
+	// 'custom-key',
+	// [],
+	// $logger
+	// );
+	// $service = $sut->create();
+	// $this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
+	// }
+
+	/**
+	 * Undocumented function
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @return void
+	 */
+	// public function testCreateUsesCustomMetaAnnotationKey() {
+	// $metaKey = 'custom-meta-key';
+	// $this->getAssembler()->shouldReceive( '__construct' )
+	// ->with( $metaKey, Mockery::type( LoggerInterface::class ) )
+	// ->andReturnNull();
+	// $sut     = new PluginPackageMetaValueServiceFactoryV1( 'http://example.com/meta.json', $metaKey );
+	// $service = $sut->create();
+	// $this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
+	// }
+}
