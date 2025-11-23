@@ -9,8 +9,11 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value
 
 use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\PluginPackageMetaValueServiceFactoryV1;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Mockery;
@@ -73,9 +76,13 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->assembler = Mockery::mock(
 			'overload:CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler',
+			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract'
 		);
 		// phpcs:enable Generic.Files.LineLength.TooLong
-		$this->reader    = Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader' );
+		$this->reader    = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader',
+			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract'
+		);
 		$this->logger    = Mockery::mock( LoggerInterface::class );
 		$this->slugValue = Mockery::mock( SlugValueContract::class );
 		$this->parser    = Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser' );
@@ -179,14 +186,17 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 				]
 			)
 			->andReturnNull();
-		$this->getService()->shouldReceive( '__construct' );
-		// ->with(
-		// $this->getReader(),
-		// $this->getSlugValue(),
-		// $this->getAssembler(),
-		// $this->getLogger()
-		// );
-		// ->andReturnNull();
+		$this->getService()
+			->shouldReceive( '__construct' )
+			->withArgs(
+				function ( ...$args ) {
+					$this->assertInstanceOf( ReaderContract::class, $args[0] );
+					$this->assertSame( $this->getSlugValue(), $args[1] );
+					$this->assertInstanceOf( StringPackageMetaArrayAssemblerContract::class, $args[2] );
+					$this->assertSame( $this->getLogger(), $args[3] );
+					return true;
+				}
+			);
 		$service = $sut->create();
 		$this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
 	}
