@@ -145,7 +145,12 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaReturnsValueOnSuccess(): void {
-		$sut = new ThemePackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
+		$sut = new ThemePackageMetaValueService(
+			$this->getReader(),
+			$this->getSlugValue(),
+			$this->getAssembler(),
+			$this->getLogger()
+		);
 		$this->assertInstanceOf( ThemePackageMetaValueContract::class, $sut->getPackageMeta() );
 	}
 
@@ -157,7 +162,12 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaDoesNotCacheValue(): void {
-		$sut    = new ThemePackageMetaValueService( $this->getReader(), $this->getSlugValue(), $this->getAssembler(), $this->getLogger() );
+		$sut    = new ThemePackageMetaValueService(
+			$this->getReader(),
+			$this->getSlugValue(),
+			$this->getAssembler(),
+			$this->getLogger()
+		);
 		$first  = $sut->getPackageMeta();
 		$second = $sut->getPackageMeta();
 		$this->assertNotSame( $first, $second );
