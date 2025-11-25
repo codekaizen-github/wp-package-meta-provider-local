@@ -13,7 +13,6 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\S
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Mockery;
@@ -63,7 +62,7 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 	/**
 	 * Undocumented function
 	 *
-	 * @return void
+	 * @var ?MockInterface
 	 */
 	protected ?MockInterface $parser;
 
@@ -85,7 +84,10 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 		);
 		$this->logger    = Mockery::mock( LoggerInterface::class );
 		$this->slugValue = Mockery::mock( SlugValueContract::class );
-		$this->parser    = Mockery::mock( 'overload:CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser' );
+		$this->parser    = Mockery::mock(
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser',
+			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract'
+		);
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->service = Mockery::mock(
 			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService',
@@ -162,8 +164,9 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 	 * @return void
 	 */
 	public function testCreateReturnsServiceInstanceWithDefaults() {
-		$sut = new PluginPackageMetaValueServiceFactoryV1(
-			'/path/to/meta/file',
+		$filePath = '/path/to/meta/file';
+		$sut      = new PluginPackageMetaValueServiceFactoryV1(
+			$filePath,
 			$this->getSlugValue(),
 			$this->getLogger()
 		);
@@ -184,8 +187,18 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 					'UpdateURI'       => 'Update URI',
 					'RequiresPlugins' => 'Requires Plugins',
 				]
-			)
-			->andReturnNull();
+			);
+		$this->getAssembler()
+			->shouldReceive( '__construct' )
+			->withArgs(
+				function ( ...$args ) {
+					$this->assertInstanceOf( StringToArrayStringByStringParserContract::class, $args[0] );
+					$this->assertSame( $this->getLogger(), $args[1] );
+					return true;
+				}
+			);
+		$this->getReader()->shouldReceive( '__construct' )
+			->with( $filePath );
 		$this->getService()
 			->shouldReceive( '__construct' )
 			->withArgs(
@@ -200,40 +213,4 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 		$service = $sut->create();
 		$this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
 	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 * @return void
-	 */
-	// public function testCreateReturnsServiceInstanceWithCustomLogger() {
-	// $logger  = Mockery::mock( LoggerInterface::class );
-	// $sut     = new PluginPackageMetaValueServiceFactoryV1(
-	// 'http://example.com/meta.json',
-	// 'custom-key',
-	// [],
-	// $logger
-	// );
-	// $service = $sut->create();
-	// $this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
-	// }
-
-	/**
-	 * Undocumented function
-	 *
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 * @return void
-	 */
-	// public function testCreateUsesCustomMetaAnnotationKey() {
-	// $metaKey = 'custom-meta-key';
-	// $this->getAssembler()->shouldReceive( '__construct' )
-	// ->with( $metaKey, Mockery::type( LoggerInterface::class ) )
-	// ->andReturnNull();
-	// $sut     = new PluginPackageMetaValueServiceFactoryV1( 'http://example.com/meta.json', $metaKey );
-	// $service = $sut->create();
-	// $this->assertInstanceOf( PluginPackageMetaValueServiceContract::class, $service );
-	// }
 }
