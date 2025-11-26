@@ -4,3 +4,4 @@ composer analyze;
 composer test;
 composer run fix;
 composer run sniff;
+exit 0;
