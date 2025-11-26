@@ -99,6 +99,15 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 	/**
 	 * Undocumented function
 	 *
+	 * @return void
+	 */
+	protected function tearDown(): void {
+		Mockery::close();
+	}
+
+	/**
+	 * Undocumented function
+	 *
 	 * @return MockInterface
 	 */
 	public function getAssembler(): MockInterface {
