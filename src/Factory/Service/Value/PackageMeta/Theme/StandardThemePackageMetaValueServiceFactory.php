@@ -2,10 +2,10 @@
 /**
  * Factory for ThemePackageMetaValueService instances.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Theme
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Theme;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
@@ -19,7 +19,7 @@ use Psr\Log\NullLogger;
 /**
  * Undocumented class
  */
-class ThemePackageMetaValueServiceFactoryV1 {
+class StandardThemePackageMetaValueServiceFactory {
 	/**
 	 * URL to meta endpoint.
 	 *

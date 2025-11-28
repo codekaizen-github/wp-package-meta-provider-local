@@ -2,10 +2,10 @@
 /**
  * Factory for PluginPackageMetaValueService instances.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Plugin
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Plugin;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
@@ -19,7 +19,7 @@ use Psr\Log\NullLogger;
 /**
  * Undocumented class
  */
-class PluginPackageMetaValueServiceFactoryV1 {
+class StandardPluginPackageMetaValueServiceFactory {
 	/**
 	 * URL to meta endpoint.
 	 *

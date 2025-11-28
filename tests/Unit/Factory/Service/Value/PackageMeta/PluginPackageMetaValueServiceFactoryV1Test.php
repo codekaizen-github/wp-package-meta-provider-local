@@ -7,7 +7,8 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\PluginPackageMetaValueServiceFactoryV1;
+// phpcs:ignore Generic.Files.LineLength.TooLong
+use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueServiceFactory;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;
@@ -174,7 +175,7 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 	 */
 	public function testCreateReturnsServiceInstanceWithDefaults() {
 		$filePath = '/path/to/meta/file';
-		$sut      = new PluginPackageMetaValueServiceFactoryV1(
+		$sut      = new StandardPluginPackageMetaValueServiceFactory(
 			$filePath,
 			$this->getSlugValue(),
 			$this->getLogger()
