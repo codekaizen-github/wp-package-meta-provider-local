@@ -8,7 +8,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Assembler\Array\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -32,9 +32,9 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 	/**
 	 * Undocumented variable
 	 *
-	 * @var (StringToArrayStringByStringParserContract&MockInterface)|null
+	 * @var (StringMapStringParserContract&MockInterface)|null
 	 */
-	protected ?StringToArrayStringByStringParserContract $parser;
+	protected ?StringMapStringParserContract $parser;
 
 	/**
 	 * Undocumented function
@@ -42,7 +42,7 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$this->parser = Mockery::mock( StringToArrayStringByStringParserContract::class );
+		$this->parser = Mockery::mock( StringMapStringParserContract::class );
 		$this->logger = Mockery::mock( LoggerInterface::class );
 	}
 
@@ -59,9 +59,9 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 	/**
 	 * Undocumented function
 	 *
-	 * @return StringToArrayStringByStringParserContract&MockInterface
+	 * @return StringMapStringParserContract&MockInterface
 	 */
-	protected function getParser(): StringToArrayStringByStringParserContract&MockInterface {
+	protected function getParser(): StringMapStringParserContract&MockInterface {
 		self::assertNotNull( $this->parser );
 		return $this->parser;
 	}

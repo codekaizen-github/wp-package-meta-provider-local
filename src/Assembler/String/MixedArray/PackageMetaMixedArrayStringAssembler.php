@@ -9,7 +9,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;
 // phpcs:ignore Generic.Files.LineLength.TooLong
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -26,9 +26,9 @@ class PackageMetaMixedArrayStringAssembler implements MixedArrayStringAssemblerC
 	/**
 	 * Parser.
 	 *
-	 * @var StringToArrayStringByStringParserContract
+	 * @var StringMapStringParserContract
 	 */
-	protected StringToArrayStringByStringParserContract $parser;
+	protected StringMapStringParserContract $parser;
 	/**
 	 * Undocumented variable
 	 *
@@ -38,11 +38,11 @@ class PackageMetaMixedArrayStringAssembler implements MixedArrayStringAssemblerC
 	/**
 	 * Constructor.
 	 *
-	 * @param StringToArrayStringByStringParserContract $parser Parser.
-	 * @param LoggerInterface                           $logger Logger.
+	 * @param StringMapStringParserContract $parser Parser.
+	 * @param LoggerInterface               $logger Logger.
 	 */
 	public function __construct(
-		StringToArrayStringByStringParserContract $parser,
+		StringMapStringParserContract $parser,
 		LoggerInterface $logger = new NullLogger()
 	) {
 		$this->parser = $parser;

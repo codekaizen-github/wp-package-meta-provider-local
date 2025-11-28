@@ -2,12 +2,12 @@
 /**
  * String to Array String By String Parser Contract
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String;
 
-interface StringToArrayStringByStringParserContract {
+interface StringMapStringParserContract {
 	/**
 	 * Parses a string into an array of strings using a specified delimiter.
 	 *

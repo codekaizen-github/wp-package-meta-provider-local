@@ -10,7 +10,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value
 use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\ThemePackageMetaValueServiceFactoryV1;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use PHPUnit\Framework\TestCase;
@@ -86,7 +86,7 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 		$this->slugValue = Mockery::mock( SlugValueContract::class );
 		$this->parser    = Mockery::mock(
 			'overload:CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser',
-			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract'
+			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract'
 		);
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->service = Mockery::mock(
@@ -202,7 +202,7 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 			->shouldReceive( '__construct' )
 			->withArgs(
 				function ( ...$args ) {
-					$this->assertInstanceOf( StringToArrayStringByStringParserContract::class, $args[0] );
+					$this->assertInstanceOf( StringMapStringParserContract::class, $args[0] );
 					$this->assertSame( $this->getLogger(), $args[1] );
 					return true;
 				}
