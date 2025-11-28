@@ -8,7 +8,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler;
+use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
@@ -63,7 +63,7 @@ class PluginPackageMetaValueServiceFactoryV1 {
 	 * @return PluginPackageMetaValueServiceContract
 	 */
 	public function create(): PluginPackageMetaValueServiceContract {
-		$assembler = new StringPackageMetaArrayAssembler(
+		$assembler = new PackageMetaMixedArrayStringAssembler(
 			new HeadersParser(
 				[
 					'Name'            => 'Plugin Name',

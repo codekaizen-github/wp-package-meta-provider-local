@@ -7,7 +7,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Assembler\Array\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler;
+use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
 use Mockery;
 use Mockery\MockInterface;
@@ -91,7 +91,7 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 		$parser    = $this->getParser();
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( $metaArray );
 		$logger = $this->getLogger();
-		$sut    = new StringPackageMetaArrayAssembler( $parser, $logger );
+		$sut    = new PackageMetaMixedArrayStringAssembler( $parser, $logger );
 		$result = $sut->assemble( $content );
 		$this->assertSame( $metaArray, $result );
 	}
@@ -106,7 +106,7 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 		$parser  = $this->getParser();
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( 'not-an-array' );
 		$logger = $this->getLogger();
-		$sut    = new StringPackageMetaArrayAssembler( $parser, $logger );
+		$sut    = new PackageMetaMixedArrayStringAssembler( $parser, $logger );
 		$this->expectException( TypeError::class );
 		$sut->assemble( $content );
 	}
@@ -122,7 +122,7 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( [ 123 => 'value' ] );
 		$logger = $this->getLogger();
 		$logger->shouldReceive( 'error' )->once();
-		$sut = new StringPackageMetaArrayAssembler( $parser, $logger );
+		$sut = new PackageMetaMixedArrayStringAssembler( $parser, $logger );
 		$this->expectException( UnexpectedValueException::class );
 		$sut->assemble( $content );
 	}
@@ -138,7 +138,7 @@ class StringPackageMetaArrayAssemblerTest extends TestCase {
 		$parser->shouldReceive( 'parse' )->with( $content )->andReturn( [ 'asdf' => 123 ] );
 		$logger = $this->getLogger();
 		$logger->shouldReceive( 'error' )->once();
-		$sut = new StringPackageMetaArrayAssembler( $parser, $logger );
+		$sut = new PackageMetaMixedArrayStringAssembler( $parser, $logger );
 		$this->expectException( UnexpectedValueException::class );
 		$sut->assemble( $content );
 	}

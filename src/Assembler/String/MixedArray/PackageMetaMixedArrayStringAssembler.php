@@ -2,13 +2,13 @@
 /**
  * Assembler
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta;
+ * @package CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray;
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
 // phpcs:ignore Generic.Files.LineLength.TooLong
 use Psr\Log\LoggerInterface;
@@ -21,7 +21,7 @@ use UnexpectedValueException;
 /**
  * Class to assemble package meta from response
  */
-class StringPackageMetaArrayAssembler implements StringPackageMetaArrayAssemblerContract {
+class PackageMetaMixedArrayStringAssembler implements MixedArrayStringAssemblerContract {
 
 	/**
 	 * Parser.

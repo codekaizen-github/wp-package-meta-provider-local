@@ -12,7 +12,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract;
 // phpcs:ignore Generic.Files.LineLength -- Keep import on one line.
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 // phpcs:ignore Generic.Files.LineLength -- Keep import on one line.
@@ -46,9 +46,9 @@ class PluginPackageMetaValueService implements PluginPackageMetaValueServiceCont
 	/**
 	 * Assembler.
 	 *
-	 * @var StringPackageMetaArrayAssemblerContract
+	 * @var MixedArrayStringAssemblerContract
 	 */
-	protected StringPackageMetaArrayAssemblerContract $assembler;
+	protected MixedArrayStringAssemblerContract $assembler;
 
 	/**
 	 * Undocumented variable
@@ -60,15 +60,15 @@ class PluginPackageMetaValueService implements PluginPackageMetaValueServiceCont
 	/**
 	 * Constructor.
 	 *
-	 * @param ReaderContract                          $reader Reader.
-	 * @param SlugValueContract                       $slugParser Slug data.
-	 * @param StringPackageMetaArrayAssemblerContract $assembler Assembler.
-	 * @param LoggerInterface                         $logger Logger.
+	 * @param ReaderContract                    $reader Reader.
+	 * @param SlugValueContract                 $slugParser Slug data.
+	 * @param MixedArrayStringAssemblerContract $assembler Assembler.
+	 * @param LoggerInterface                   $logger Logger.
 	 */
 	public function __construct(
 		ReaderContract $reader,
 		SlugValueContract $slugParser,
-		StringPackageMetaArrayAssemblerContract $assembler,
+		MixedArrayStringAssemblerContract $assembler,
 		LoggerInterface $logger = new NullLogger()
 	) {
 		$this->reader     = $reader;

@@ -10,7 +10,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Service\Value\Package
 // phpcs:disable Generic.Files.LineLength -- Keep import on one line.
 use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\ThemePackageMetaValueService;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use PHPUnit\Framework\TestCase;
@@ -42,9 +42,9 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	/**
 	 * Undocumented variable
 	 *
-	 * @var (StringPackageMetaArrayAssemblerContract&MockInterface)|null
+	 * @var (MixedArrayStringAssemblerContract&MockInterface)|null
 	 */
-	protected ?StringPackageMetaArrayAssemblerContract $assembler;
+	protected ?MixedArrayStringAssemblerContract $assembler;
 
 	/**
 	 * Undocumented variable
@@ -70,7 +70,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 		$this->slugParser       = Mockery::mock( SlugValueContract::class );
 		$this->logger           = Mockery::mock( LoggerInterface::class );
 		$this->reader           = Mockery::mock( ReaderContract::class );
-		$this->assembler        = Mockery::mock( StringPackageMetaArrayAssemblerContract::class );
+		$this->assembler        = Mockery::mock( MixedArrayStringAssemblerContract::class );
 		$this->packageMetaValue = Mockery::mock(
 			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue',
 			'CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract'
@@ -122,9 +122,9 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	/**
 	 * Undocumented function
 	 *
-	 * @return StringPackageMetaArrayAssemblerContract&MockInterface
+	 * @return MixedArrayStringAssemblerContract&MockInterface
 	 */
-	protected function getAssembler(): StringPackageMetaArrayAssemblerContract {
+	protected function getAssembler(): MixedArrayStringAssemblerContract {
 		self::assertNotNull( $this->assembler );
 		return $this->assembler;
 	}

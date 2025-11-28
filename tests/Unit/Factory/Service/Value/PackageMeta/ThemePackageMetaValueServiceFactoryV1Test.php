@@ -9,7 +9,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value
 
 use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\ThemePackageMetaValueServiceFactoryV1;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
@@ -74,8 +74,8 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 	protected function setUp(): void {
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->assembler = Mockery::mock(
-			'overload:CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler',
-			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\Array\PackageMeta\StringPackageMetaArrayAssemblerContract'
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler',
+			'CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract'
 		);
 		// phpcs:enable Generic.Files.LineLength.TooLong
 		$this->reader    = Mockery::mock(
@@ -215,7 +215,7 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 				function ( ...$args ) {
 					$this->assertInstanceOf( ReaderContract::class, $args[0] );
 					$this->assertSame( $this->getSlugValue(), $args[1] );
-					$this->assertInstanceOf( StringPackageMetaArrayAssemblerContract::class, $args[2] );
+					$this->assertInstanceOf( MixedArrayStringAssemblerContract::class, $args[2] );
 					$this->assertSame( $this->getLogger(), $args[3] );
 					return true;
 				}

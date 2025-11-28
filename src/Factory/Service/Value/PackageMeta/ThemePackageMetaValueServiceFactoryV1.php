@@ -8,7 +8,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Assembler\Array\PackageMeta\StringPackageMetaArrayAssembler;
+use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
@@ -63,7 +63,7 @@ class ThemePackageMetaValueServiceFactoryV1 {
 	 * @return ThemePackageMetaValueServiceContract
 	 */
 	public function create(): ThemePackageMetaValueServiceContract {
-		$assembler = new StringPackageMetaArrayAssembler(
+		$assembler = new PackageMetaMixedArrayStringAssembler(
 			new HeadersParser(
 				[
 					'Name'        => 'Theme Name',
