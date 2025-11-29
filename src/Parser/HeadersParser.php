@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Parser;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\StringToArrayStringByStringParserContract;
+use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;
 
 use UnexpectedValueException;
 
@@ -19,7 +19,7 @@ use UnexpectedValueException;
  *
  * @since 1.0.0
  */
-class HeadersParser implements StringToArrayStringByStringParserContract {
+class HeadersParser implements StringMapStringParserContract {
 
 
 	/**
