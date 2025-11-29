@@ -52,7 +52,7 @@ class StandardThemePackageMetaValueTest extends TestCase {
 		$iconsExpected                    = [];
 		$bannersExpected                  = [];
 		$bannersRTLExpected               = [];
-		$testedExpected                   = null;
+		$testedExpected                   = '5.4';
 		$stableExpected                   = null;
 		$licenseExpected                  = null;
 		$licenseURLExpected               = null;
@@ -72,6 +72,7 @@ class StandardThemePackageMetaValueTest extends TestCase {
 			'RequiresWP'  => $requiresWordPressVersionExpected,
 			'RequiresPHP' => $requiresPHPVersionExpected,
 			'UpdateURI'   => $downloadURLExpected,
+			'TestedWP'    => $testedExpected,
 		];
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
@@ -132,7 +133,7 @@ class StandardThemePackageMetaValueTest extends TestCase {
 		$iconsExpected                    = [];
 		$bannersExpected                  = [];
 		$bannersRTLExpected               = [];
-		$testedExpected                   = null;
+		$testedExpected                   = '5.4';
 		$stableExpected                   = null;
 		$licenseExpected                  = null;
 		$licenseURLExpected               = null;
@@ -152,6 +153,7 @@ class StandardThemePackageMetaValueTest extends TestCase {
 			'RequiresWP'  => $requiresWordPressVersionExpected,
 			'RequiresPHP' => $requiresPHPVersionExpected,
 			'UpdateURI'   => $downloadURLExpected,
+			'TestedWP'    => $testedExpected,
 		];
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );

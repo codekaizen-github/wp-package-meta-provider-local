@@ -54,6 +54,7 @@ class ArrayThemePackageMetaRule extends Simple {
 				new Rules\Key( 'RequiresWP', new FlexibleSemanticVersionRule(), false ),
 				new Rules\Key( 'RequiresPHP', new FlexibleSemanticVersionRule(), false ),
 				new Rules\Key( 'UpdateURI', new Rules\Url(), false ),
+				new Rules\Key( 'TestedWP', new FlexibleSemanticVersionRule(), false ),
 			)
 		)->isValid( $input );
 	}

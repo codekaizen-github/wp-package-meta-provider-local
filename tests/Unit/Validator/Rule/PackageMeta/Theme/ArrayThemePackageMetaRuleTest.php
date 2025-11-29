@@ -42,6 +42,7 @@ class ArrayThemePackageMetaRuleTest extends TestCase {
 			'RequiresWP'  => '6.8.2',
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => '5.4',
 		];
 		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
@@ -67,6 +68,7 @@ class ArrayThemePackageMetaRuleTest extends TestCase {
 			'RequiresWP'  => '6.8.2',
 			'RequiresPHP' => '8.2',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => '5.4',
 		];
 		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
@@ -104,6 +106,7 @@ class ArrayThemePackageMetaRuleTest extends TestCase {
 			'RequiresWP'  => '6.8.2',
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => '5.4',
 		];
 		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
@@ -129,6 +132,7 @@ class ArrayThemePackageMetaRuleTest extends TestCase {
 			'RequiresWP'  => '6.8.2',
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => '5.4',
 		];
 		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
@@ -153,8 +157,36 @@ class ArrayThemePackageMetaRuleTest extends TestCase {
 			'RequiresWP'  => '6.8.2',
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => '5.4',
 		];
 		// Testing without using check() to avoid exception handling.
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
+		$this->assertFalse( $isValid );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function testInvalidTestedWPIsNotAVersion(): void {
+		$input   = [
+			'Name'        => 'Test Theme',
+			'ThemeURI'    => 'https://codekaizen.net',
+			'Description' => 'This is a test theme',
+			'Author'      => 'Andrew Dawes',
+			'AuthorURI'   => 'https://codekaizen.net/team/andrew-dawes',
+			'Version'     => '3.0.1',
+			'Template'    => 'parent-theme',
+			'Status'      => 'publish',
+			'Tags'        => 'awesome,cool,test',
+			'TextDomain'  => 'test-theme',
+			'DomainPath'  => '/languages',
+			'RequiresWP'  => '6.8.2',
+			'RequiresPHP' => '8.2.1',
+			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
+			'TestedWP'    => 'latest',
+		];
 		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}

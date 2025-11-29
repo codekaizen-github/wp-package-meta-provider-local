@@ -80,6 +80,7 @@ class StandardThemePackageMetaValueServiceFactory {
 					'RequiresWP'  => 'Requires at least',
 					'RequiresPHP' => 'Requires PHP',
 					'UpdateURI'   => 'Update URI',
+					'TestedWP'    => 'Tested up to',
 				]
 			),
 			$this->logger

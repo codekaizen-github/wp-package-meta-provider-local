@@ -197,6 +197,7 @@ class StandardThemePackageMetaValueServiceFactoryTest extends TestCase {
 					'RequiresWP'  => 'Requires at least',
 					'RequiresPHP' => 'Requires PHP',
 					'UpdateURI'   => 'Update URI',
+					'TestedWP'    => 'Tested up to',
 				]
 			);
 		$this->getAssembler()

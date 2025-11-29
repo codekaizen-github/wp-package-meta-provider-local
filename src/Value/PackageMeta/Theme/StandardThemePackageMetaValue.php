@@ -132,7 +132,7 @@ class StandardThemePackageMetaValue implements ThemePackageMetaValueContract {
 	 * @return ?string Tested WordPress version or null if not available.
 	 */
 	public function getTested(): ?string {
-		return null;
+		return $this->getPackageMeta()['TestedWP'] ?? null;
 	}
 	/**
 	 * Gets the stable version of the theme.
