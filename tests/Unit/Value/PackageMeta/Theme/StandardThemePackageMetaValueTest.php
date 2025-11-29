@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @since 1.0.0
  */
-class ThemePackageMetaValueTest extends TestCase {
+class StandardThemePackageMetaValueTest extends TestCase {
 
 	/**
 	 * Tests getName() extracts the correct plugin name from the My Basics plugin.

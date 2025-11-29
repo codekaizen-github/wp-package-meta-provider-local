@@ -19,7 +19,7 @@ use UnexpectedValueException;
 /**
  * Undocumented class
  */
-class StringPackageMetaArrayAssemblerTest extends TestCase {
+class PackageMetaMixedArrayStringAssemblerTest extends TestCase {
 
 	/**
 	 * Undocumented variable

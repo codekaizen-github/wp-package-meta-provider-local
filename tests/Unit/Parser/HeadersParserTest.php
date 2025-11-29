@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @since 1.0.0
  */
-class SelectHeadersAccessorTest extends TestCase {
+class HeadersParserTest extends TestCase {
 
 	/**
 	 * Tests parsing of standard plugin headers from My Basics plugin file.

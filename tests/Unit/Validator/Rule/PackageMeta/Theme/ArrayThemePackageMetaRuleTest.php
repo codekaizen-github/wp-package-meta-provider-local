@@ -19,7 +19,7 @@ use Respect\Validation\Validator;
  *
  * @since 1.0.0
  */
-class ThemeHeadersArrayRuleTest extends TestCase {
+class ArrayThemePackageMetaRuleTest extends TestCase {
 
 	/**
 	 * Tests validation of a complete theme header array with all possible fields.

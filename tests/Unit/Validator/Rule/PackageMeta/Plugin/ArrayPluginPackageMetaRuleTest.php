@@ -19,7 +19,7 @@ use Respect\Validation\Validator;
  *
  * @since 1.0.0
  */
-class PluginHeadersArrayRuleTest extends TestCase {
+class ArrayPluginPackageMetaRuleTest extends TestCase {
 
 	/**
 	 * Tests validation of a complete plugin header array with all possible fields.

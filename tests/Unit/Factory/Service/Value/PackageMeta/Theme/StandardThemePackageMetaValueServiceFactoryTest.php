@@ -22,7 +22,7 @@ use Mockery\MockInterface;
 /**
  * Undocumented class
  */
-class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
+class StandardThemePackageMetaValueServiceFactoryTest extends TestCase {
 
 	/**
 	 * Undocumented variable
