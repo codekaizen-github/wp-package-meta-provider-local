@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PluginPackageMetaValueService instances.
+ * Factory for StandardPluginPackageMetaValueService instances.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta
  */
@@ -91,7 +91,7 @@ class PluginPackageMetaValueServiceFactoryV1Test extends TestCase {
 		);
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->service = Mockery::mock(
-			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService',
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueService',
 			'CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\PluginPackageMetaValueServiceContract'
 		);
 		// phpcs:enable Generic.Files.LineLength.TooLong

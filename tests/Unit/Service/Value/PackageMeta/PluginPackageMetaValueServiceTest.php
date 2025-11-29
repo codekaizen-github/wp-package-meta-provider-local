@@ -8,7 +8,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Service\Value\PackageMeta;
 
 // phpcs:disable Generic.Files.LineLength -- Keep import on one line.
-use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService;
+use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueService;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
@@ -146,7 +146,7 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaReturnsValueOnSuccess(): void {
-		$sut = new PluginPackageMetaValueService(
+		$sut = new StandardPluginPackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -163,7 +163,7 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaDoesNotCacheValue(): void {
-		$sut    = new PluginPackageMetaValueService(
+		$sut    = new StandardPluginPackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -187,7 +187,7 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 			->getAssembler()
 			->shouldReceive( 'assemble' )
 			->andThrow( new UnexpectedValueException( 'Invalid meta' ) );
-		$sut = new PluginPackageMetaValueService(
+		$sut = new StandardPluginPackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -206,7 +206,7 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 		$content = 'meta-content';
 		$this->getReader()->shouldReceive( 'read' )->andReturn( $content );
 		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( [] );
-		$sut = new PluginPackageMetaValueService(
+		$sut = new StandardPluginPackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ThemePackageMetaValueService instances.
+ * Factory for StandardThemePackageMetaValueService instances.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Theme
  */
@@ -12,7 +12,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMet
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
-use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\ThemePackageMetaValueService;
+use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Theme\StandardThemePackageMetaValueService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -58,7 +58,7 @@ class StandardThemePackageMetaValueServiceFactory {
 		$this->logger     = $logger;
 	}
 	/**
-	 * Creates a new ThemePackageMetaValueService instance.
+	 * Creates a new StandardThemePackageMetaValueService instance.
 	 *
 	 * @return ThemePackageMetaValueServiceContract
 	 */
@@ -85,7 +85,7 @@ class StandardThemePackageMetaValueServiceFactory {
 			$this->logger
 		);
 		$reader    = new FileReader( $this->filePath );
-		return new ThemePackageMetaValueService(
+		return new StandardThemePackageMetaValueService(
 			$reader,
 			$this->slugParser,
 			$assembler,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for PluginPackageMetaValueService instances.
+ * Factory for StandardPluginPackageMetaValueService instances.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Plugin
  */
@@ -12,7 +12,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMet
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;
-use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\PluginPackageMetaValueService;
+use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueService;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -58,7 +58,7 @@ class StandardPluginPackageMetaValueServiceFactory {
 		$this->logger     = $logger;
 	}
 	/**
-	 * Creates a new PluginPackageMetaValueService instance.
+	 * Creates a new StandardPluginPackageMetaValueService instance.
 	 *
 	 * @return PluginPackageMetaValueServiceContract
 	 */
@@ -86,7 +86,7 @@ class StandardPluginPackageMetaValueServiceFactory {
 			$this->logger
 		);
 		$reader = new FileReader( $this->filePath );
-		return new PluginPackageMetaValueService(
+		return new StandardPluginPackageMetaValueService(
 			$reader,
 			$this->slugParser,
 			$assembler,

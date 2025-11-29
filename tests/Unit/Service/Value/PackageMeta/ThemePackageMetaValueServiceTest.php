@@ -8,7 +8,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Service\Value\PackageMeta;
 
 // phpcs:disable Generic.Files.LineLength -- Keep import on one line.
-use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\ThemePackageMetaValueService;
+use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Theme\StandardThemePackageMetaValueService;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArrayStringAssemblerContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
@@ -145,7 +145,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaReturnsValueOnSuccess(): void {
-		$sut = new ThemePackageMetaValueService(
+		$sut = new StandardThemePackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -162,7 +162,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function testGetPackageMetaDoesNotCacheValue(): void {
-		$sut    = new ThemePackageMetaValueService(
+		$sut    = new StandardThemePackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -186,7 +186,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 			->getAssembler()
 			->shouldReceive( 'assemble' )
 			->andThrow( new UnexpectedValueException( 'Invalid meta' ) );
-		$sut = new ThemePackageMetaValueService(
+		$sut = new StandardThemePackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),
@@ -205,7 +205,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 		$content = 'meta-content';
 		$this->getReader()->shouldReceive( 'read' )->andReturn( $content );
 		$this->getAssembler()->shouldReceive( 'assemble' )->andReturn( [] );
-		$sut = new ThemePackageMetaValueService(
+		$sut = new StandardThemePackageMetaValueService(
 			$this->getReader(),
 			$this->getSlugValue(),
 			$this->getAssembler(),

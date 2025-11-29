@@ -1,6 +1,6 @@
 <?php
 /**
- * Factory for ThemePackageMetaValueService instances.
+ * Factory for StandardThemePackageMetaValueService instances.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta
  */
@@ -91,7 +91,7 @@ class ThemePackageMetaValueServiceFactoryV1Test extends TestCase {
 		);
 		// phpcs:disable Generic.Files.LineLength.TooLong
 		$this->service = Mockery::mock(
-			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\ThemePackageMetaValueService',
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Theme\StandardThemePackageMetaValueService',
 			'CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract'
 		);
 		// phpcs:enable Generic.Files.LineLength.TooLong
