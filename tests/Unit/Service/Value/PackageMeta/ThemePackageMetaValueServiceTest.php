@@ -72,7 +72,7 @@ class ThemePackageMetaValueServiceTest extends TestCase {
 		$this->reader           = Mockery::mock( ReaderContract::class );
 		$this->assembler        = Mockery::mock( MixedArrayStringAssemblerContract::class );
 		$this->packageMetaValue = Mockery::mock(
-			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue',
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Theme\StandardThemePackageMetaValue',
 			'CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract'
 		);
 		$this->getReader()->shouldReceive( 'read' )->byDefault();

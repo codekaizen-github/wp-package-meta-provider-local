@@ -11,7 +11,7 @@
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
-use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue;
+use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Plugin\StandardPluginPackageMetaValue;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -74,7 +74,7 @@ class PluginPackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new PluginPackageMetaValue( $response, $slugParser );
+		$sut = new StandardPluginPackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
@@ -153,7 +153,7 @@ class PluginPackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new PluginPackageMetaValue( $response, $slugParser );
+		$sut = new StandardPluginPackageMetaValue( $response, $slugParser );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$encoded = json_encode( $sut );
 		$this->assertIsString( $encoded );
@@ -246,7 +246,7 @@ class PluginPackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new PluginPackageMetaValue( $response, $slugParser );
+		$sut = new StandardPluginPackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );

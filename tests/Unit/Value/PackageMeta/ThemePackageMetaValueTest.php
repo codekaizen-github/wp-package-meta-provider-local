@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue;
+use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Theme\StandardThemePackageMetaValue;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -76,7 +76,7 @@ class ThemePackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new ThemePackageMetaValue( $response, $slugParser );
+		$sut = new StandardThemePackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );
@@ -156,7 +156,7 @@ class ThemePackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new ThemePackageMetaValue( $response, $slugParser );
+		$sut = new StandardThemePackageMetaValue( $response, $slugParser );
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$encoded = json_encode( $sut );
 		$this->assertIsString( $encoded );
@@ -247,7 +247,7 @@ class ThemePackageMetaValueTest extends TestCase {
 		$slugParser                       = Mockery::mock( SlugValueContract::class );
 		$slugParser->shouldReceive( 'getFullSlug' )->with()->andReturn( $fullSlugExpected );
 		$slugParser->shouldReceive( 'getShortSlug' )->with()->andReturn( $shortSlugExpected );
-		$sut = new ThemePackageMetaValue( $response, $slugParser );
+		$sut = new StandardThemePackageMetaValue( $response, $slugParser );
 		$this->assertEquals( $nameExpected, $sut->getName() );
 		$this->assertEquals( $fullSlugExpected, $sut->getFullSlug() );
 		$this->assertEquals( $shortSlugExpected, $sut->getShortSlug() );

@@ -1,32 +1,32 @@
 <?php
 /**
- * Local Theme Package Meta Provider
+ * Local Plugin Package Meta Provider
  *
- * Provides metadata for WordPress themes installed locally.
+ * Provides metadata for WordPress plugins installed locally.
  *
  * @package CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Plugin;
 
-use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\ThemePackageMetaValueContract;
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use Respect\Validation\Validator;
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Theme\ArrayThemePackageMetaRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Plugin\ArrayPluginPackageMetaRule;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
 use UnexpectedValueException;
 
 /**
- * Provider for local WordPress theme package metadata.
+ * Provider for local WordPress plugin package metadata.
  *
- * Reads and parses metadata from theme files in the local filesystem.
+ * Reads and parses metadata from plugin files in the local filesystem.
  *
  * @since 1.0.0
  */
-class ThemePackageMetaValue implements ThemePackageMetaValueContract {
+class StandardPluginPackageMetaValue implements PluginPackageMetaValueContract {
 
 	/**
 	 * Logger.
@@ -54,6 +54,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 	 * @param array<string,string> $packageMeta Data.
 	 * @param SlugValueContract    $slugParser Slug data.
 	 * @param LoggerInterface      $logger Logger.
+	 *
 	 * @throws UnexpectedValueException If the metadata is invalid.
 	 */
 	public function __construct(
@@ -63,71 +64,71 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 	) {
 		$this->logger = $logger;
 		try {
-			Validator::create( new ArrayThemePackageMetaRule() )->check( $packageMeta );
+			Validator::create( new ArrayPluginPackageMetaRule() )->check( $packageMeta );
 		} catch ( Throwable $e ) {
 			$this->logger->error(
-				'Failed to validate theme metadata.',
+				'Failed to validate plugin metadata.',
 				[
 					'exception'   => $e,
 					'packageMeta' => $packageMeta,
 				]
 			);
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message not displayed to end users.
-			throw new UnexpectedValueException( 'Invalid theme metadata.', 0, $e );
+			throw new UnexpectedValueException( 'Invalid plugin metadata.', 0, $e );
 		}
 		$this->packageMeta = $packageMeta;
 		$this->slugParser  = $slugParser;
 	}
-	/**
-	 * Gets the name of the theme.
-	 *
-	 * @return string The theme name.
-	 */
+		/**
+		 * Gets the name of the plugin.
+		 *
+		 * @return string The plugin name.
+		 */
 	public function getName(): string {
 		return $this->getPackageMeta()['Name'];
 	}
 	/**
-	 * Gets the full slug, including any directory prefix and file extension.
+	 * Full slug, including any directory prefix and any file extension like .php - may contain a "/".
 	 *
-	 * @return string The full slug.
+	 * @return string
 	 */
 	public function getFullSlug(): string {
 		return $this->slugParser->getFullSlug();
 	}
 	/**
-	 * Gets the short slug, minus any prefix. Should not contain a "/".
+	 * Slug minus any prefix. Should not contain a "/".
 	 *
-	 * @return string The short slug.
+	 * @return string
 	 */
 	public function getShortSlug(): string {
 		return $this->slugParser->getShortSlug();
 	}
 	/**
-	 * Gets the version of the theme.
+	 * Gets the version of the plugin.
 	 *
-	 * @return ?string The theme version or null if not available.
+	 * @return ?string The plugin version or null if not available.
 	 */
 	public function getVersion(): ?string {
 		return $this->getPackageMeta()['Version'] ?? null;
 	}
 	/**
-	 * Gets the theme URI.
+	 * Gets the plugin URI.
 	 *
-	 * @return ?string The theme URI or null if not available.
+	 * @return ?string The plugin URI or null if not available.
 	 */
 	public function getViewURL(): ?string {
-		return $this->getPackageMeta()['ThemeURI'] ?? null;
+		return $this->getPackageMeta()['PluginURI'] ?? null;
 	}
 	/**
-	 * Gets the download URL for the theme.
+	 * Gets the download URL for the plugin.
 	 *
-	 * @return ?string The theme download URL or null if not available.
+	 * @return ?string The plugin download URL or null if not available.
 	 */
 	public function getDownloadURL(): ?string {
 		return $this->getPackageMeta()['UpdateURI'] ?? null;
 	}
 	/**
-	 * Gets the WordPress version the theme has been tested with.
+	 * Gets the WordPress version the plugin has been tested with.
 	 *
 	 * @return ?string Tested WordPress version or null if not available.
 	 */
@@ -135,7 +136,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return null;
 	}
 	/**
-	 * Gets the stable version of the theme.
+	 * Gets the stable version of the plugin.
 	 *
 	 * @return ?string The stable version or null if not available.
 	 */
@@ -143,65 +144,63 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return null;
 	}
 	/**
-	 * Gets the theme tags.
+	 * Gets the plugin tags.
 	 *
-	 * @return string[] Array of theme tags.
+	 * @return string[] Array of plugin tags.
 	 */
 	public function getTags(): array {
-		$rawValue = $this->getPackageMeta()['Tags'] ?? null;
-		return empty( $rawValue )
-			? [] : array_map( 'trim', explode( ',', $rawValue ) );
+		return [];
 	}
 	/**
-	 * Gets the theme author.
+	 * Gets the plugin author.
 	 *
-	 * @return ?string The theme author or null if not available.
+	 * @return ?string The plugin author or null if not available.
 	 */
 	public function getAuthor(): ?string {
 		return $this->getPackageMeta()['Author'] ?? null;
 	}
 	/**
-	 * Gets the theme author's URL.
+	 * Gets the plugin author's URL.
 	 *
-	 * @return ?string The theme author's URL or null if not available.
+	 * @return ?string The plugin author's URL or null if not available.
 	 */
 	public function getAuthorURL(): ?string {
 		return $this->getPackageMeta()['AuthorURI'] ?? null;
 	}
 	/**
-	 * Gets the theme license.
+	 * Gets the plugin license.
 	 *
-	 * @return ?string The theme license or null if not available.
+	 * @return ?string The plugin license or null if not available.
 	 */
 	public function getLicense(): ?string {
 		return null;
 	}
 	/**
-	 * Gets the theme license URL.
+	 * Gets the plugin license URL.
 	 *
-	 * @return ?string The theme license URL or null if not available.
+	 * @return ?string The plugin license URL or null if not available.
 	 */
 	public function getLicenseURL(): ?string {
 		return null;
 	}
 	/**
-	 * Gets the short description of the theme.
+	 * Gets the short description of the plugin.
 	 *
-	 * @return ?string The theme short description or null if not available.
+	 * @return ?string The plugin short description or null if not available.
 	 */
 	public function getShortDescription(): ?string {
 		return $this->getPackageMeta()['Description'] ?? null;
 	}
 	/**
-	 * Gets the full description of the theme.
+	 * Gets the full description of the plugin.
 	 *
-	 * @return ?string The theme full description or null if not available.
+	 * @return ?string The plugin full description or null if not available.
 	 */
 	public function getDescription(): ?string {
 		return null;
 	}
 	/**
-	 * Gets the minimum WordPress version required by the theme.
+	 * Gets the minimum WordPress version required by the plugin.
 	 *
 	 * @return ?string The required WordPress version or null if not specified.
 	 */
@@ -209,7 +208,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return $this->getPackageMeta()['RequiresWP'] ?? null;
 	}
 	/**
-	 * Gets the minimum PHP version required by the theme.
+	 * Gets the minimum PHP version required by the plugin.
 	 *
 	 * @return ?string The required PHP version or null if not specified.
 	 */
@@ -217,7 +216,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return $this->getPackageMeta()['RequiresPHP'] ?? null;
 	}
 	/**
-	 * Gets the text domain used by the theme for internationalization.
+	 * Gets the text domain used by the plugin for internationalization.
 	 *
 	 * @return ?string The text domain or null if not specified.
 	 */
@@ -225,7 +224,7 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return $this->getPackageMeta()['TextDomain'] ?? null;
 	}
 	/**
-	 * Gets the domain path for the theme's translation files.
+	 * Gets the domain path for the plugin's translation files.
 	 *
 	 * @return ?string The domain path or null if not specified.
 	 */
@@ -257,28 +256,38 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 		return [];
 	}
 	/**
-	 * Gets the template for the theme.
+	 * Gets the list of plugins that this plugin requires.
 	 *
-	 * @return ?string The template or null if not specified.
+	 * @return string[] Array of required plugin identifiers.
 	 */
-	public function getTemplate(): ?string {
-		return $this->getPackageMeta()['Template'] ?? null;
+	public function getRequiresPlugins(): array {
+		$rawValue = $this->getPackageMeta()['RequiresPlugins'] ?? null;
+		return empty( $rawValue )
+			? [] : array_map( 'trim', explode( ',', $rawValue ) );
 	}
 	/**
-	 * Gets the status for the theme.
+	 * Gets the sections of the plugin description.
 	 *
-	 * @return ?string The status or null if not specified.
+	 * @return array<string,string> Associative array of section names and their content.
 	 */
-	public function getStatus(): ?string {
-		return $this->getPackageMeta()['Status'] ?? null;
+	public function getSections(): array {
+		return [];
 	}
 	/**
-	 * Gets the theme package metadata.
+	 * Determines if this plugin is a network-only plugin.
 	 *
-	 * Parses theme file headers to extract metadata using a SelectHeadersPackageMetaParser.
+	 * @return boolean True if this is a network plugin, false otherwise.
+	 */
+	public function getNetwork(): bool {
+		return (bool) ( $this->getPackageMeta()['Network'] ?? false );
+	}
+	/**
+	 * Gets the plugin package metadata.
+	 *
+	 * Parses plugin file headers to extract metadata using a SelectHeadersPackageMetaParser.
 	 * Result is cached for subsequent calls.
 	 *
-	 * @return array<string,string> Associative array of theme metadata.
+	 * @return array<string,string> Associative array of plugin metadata.
 	 * @throws UnexpectedValueException If the metadata is invalid.
 	 */
 	protected function getPackageMeta(): array {
@@ -313,8 +322,9 @@ class ThemePackageMetaValue implements ThemePackageMetaValueContract {
 			'icons'                    => $this->getIcons(),
 			'banners'                  => $this->getBanners(),
 			'bannersRtl'               => $this->getBannersRTL(),
-			'template'                 => $this->getTemplate(),
-			'status'                   => $this->getStatus(),
+			'requiresPlugins'          => $this->getRequiresPlugins(),
+			'sections'                 => $this->getSections(),
+			'network'                  => $this->getNetwork(),
 		];
 	}
 }

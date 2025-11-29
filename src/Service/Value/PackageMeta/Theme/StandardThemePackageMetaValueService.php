@@ -16,7 +16,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArraySt
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 // phpcs:ignore Generic.Files.LineLength -- Keep import on one line.
-use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\ThemePackageMetaValue;
+use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Theme\StandardThemePackageMetaValue;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use UnexpectedValueException;
@@ -78,7 +78,7 @@ class StandardThemePackageMetaValueService implements ThemePackageMetaValueServi
 	}
 
 	/**
-	 * Creates a new ThemePackageMetaValue instance.
+	 * Creates a new StandardThemePackageMetaValue instance.
 	 *
 	 * @return ThemePackageMetaValueContract
 	 * @throws UnexpectedValueException If the metadata is invalid.
@@ -87,6 +87,6 @@ class StandardThemePackageMetaValueService implements ThemePackageMetaValueServi
 	public function getPackageMeta(): ThemePackageMetaValueContract {
 		$content   = $this->reader->read();
 		$assembled = $this->assembler->assemble( $content );
-		return new ThemePackageMetaValue( $assembled, $this->slugParser, $this->logger );
+		return new StandardThemePackageMetaValue( $assembled, $this->slugParser, $this->logger );
 	}
 }

@@ -17,7 +17,7 @@ use CodeKaizen\WPPackageMetaProviderLocal\Contract\Assembler\String\MixedArraySt
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Reader\ReaderContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 // phpcs:ignore Generic.Files.LineLength -- Keep import on one line.
-use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue;
+use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Plugin\StandardPluginPackageMetaValue;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use UnexpectedValueException;
@@ -79,7 +79,7 @@ class StandardPluginPackageMetaValueService implements PluginPackageMetaValueSer
 	}
 
 	/**
-	 * Creates a new PluginPackageMetaValue instance.
+	 * Creates a new StandardPluginPackageMetaValue instance.
 	 *
 	 * @return PluginPackageMetaValueContract
 	 * @throws UnexpectedValueException If the metadata is invalid.
@@ -88,6 +88,6 @@ class StandardPluginPackageMetaValueService implements PluginPackageMetaValueSer
 	public function getPackageMeta(): PluginPackageMetaValueContract {
 		$content   = $this->reader->read();
 		$assembled = $this->assembler->assemble( $content );
-		return new PluginPackageMetaValue( $assembled, $this->slugParser, $this->logger );
+		return new StandardPluginPackageMetaValue( $assembled, $this->slugParser, $this->logger );
 	}
 }

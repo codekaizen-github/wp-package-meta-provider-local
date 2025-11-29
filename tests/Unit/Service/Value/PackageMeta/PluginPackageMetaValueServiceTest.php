@@ -72,7 +72,7 @@ class PluginPackageMetaValueServiceTest extends TestCase {
 		$this->reader           = Mockery::mock( ReaderContract::class );
 		$this->assembler        = Mockery::mock( MixedArrayStringAssemblerContract::class );
 		$this->packageMetaValue = Mockery::mock(
-			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\PluginPackageMetaValue',
+			'overload:CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Plugin\StandardPluginPackageMetaValue',
 			'CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract'
 		);
 		$this->getReader()->shouldReceive( 'read' )->byDefault();
