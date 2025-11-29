@@ -4,11 +4,11 @@
  *
  * Tests for validating plugin header arrays according to WordPress standards.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta\Plugin
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta\Plugin;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Plugin\ArrayPluginPackageMetaRule;
 use PHPUnit\Framework\TestCase;

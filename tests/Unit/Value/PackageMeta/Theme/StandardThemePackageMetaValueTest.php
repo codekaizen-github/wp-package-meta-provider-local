@@ -4,11 +4,11 @@
  *
  * Tests for the value that reads and extracts metadata from local theme files.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta\Theme
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Value\PackageMeta\Theme;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta\Theme\StandardThemePackageMetaValue;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;

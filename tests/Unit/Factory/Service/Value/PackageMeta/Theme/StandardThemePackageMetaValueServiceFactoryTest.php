@@ -2,10 +2,10 @@
 /**
  * Factory for StandardThemePackageMetaValueService instances.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Service\Value\PackageMeta\Theme
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Service\Value\PackageMeta\Theme;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
 use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Theme\StandardThemePackageMetaValueServiceFactory;

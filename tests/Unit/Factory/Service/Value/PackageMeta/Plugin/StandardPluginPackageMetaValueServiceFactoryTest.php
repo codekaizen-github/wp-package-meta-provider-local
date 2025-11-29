@@ -2,10 +2,10 @@
 /**
  * Factory for StandardPluginPackageMetaValueService instances.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Service\Value\PackageMeta\Plugin
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Factory\Service\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Factory\Service\Value\PackageMeta\Plugin;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
 use CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueServiceFactory;
