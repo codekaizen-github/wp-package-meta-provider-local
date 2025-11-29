@@ -8,7 +8,7 @@
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Theme;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\Version\FlexibleSemanticVersionRule;
 use Respect\Validation\Validator;
@@ -23,7 +23,7 @@ use Respect\Validation\Rules\Core\Simple;
  *
  * @since 1.0.0
  */
-class ThemeHeadersArrayRule extends Simple {
+class ArrayThemePackageMetaRule extends Simple {
 
 	/**
 	 * Validates a WordPress theme header array.

@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Plugin\ArrayPluginPackageMetaRule;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Validator;
 
@@ -42,7 +42,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -66,7 +66,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -78,7 +78,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 		$input   = [
 			'Name' => 'Test Plugin',
 		];
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -102,7 +102,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 	/**
@@ -126,7 +126,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 			'UpdateURI'       => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 	/**
@@ -150,7 +150,7 @@ class PluginHeadersArrayRuleTest extends TestCase {
 			'RequiresPlugins' => 'akismet,hello-dolly',
 		];
 		// Testing without using check() to avoid exception handling.
-		$isValid = Validator::create( new PluginHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayPluginPackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 }

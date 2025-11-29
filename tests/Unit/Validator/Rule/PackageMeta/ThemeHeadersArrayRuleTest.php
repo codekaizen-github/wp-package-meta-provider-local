@@ -10,7 +10,7 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Validator\Rule\PackageMeta;
 
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\ThemeHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Theme\ArrayThemePackageMetaRule;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Validator;
 
@@ -43,7 +43,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -68,7 +68,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 			'RequiresPHP' => '8.2',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -80,7 +80,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 		$input   = [
 			'Name' => 'Test Theme',
 		];
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertTrue( $isValid );
 	}
 	/**
@@ -105,7 +105,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 	/**
@@ -130,7 +130,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 			'RequiresPHP' => '8.2.1',
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 	/**
@@ -155,7 +155,7 @@ class ThemeHeadersArrayRuleTest extends TestCase {
 			'UpdateURI'   => 'https://github.com/codekaizen-github/wp-package-meta-provider-local',
 		];
 		// Testing without using check() to avoid exception handling.
-		$isValid = Validator::create( new ThemeHeadersArrayRule() )->isValid( $input );
+		$isValid = Validator::create( new ArrayThemePackageMetaRule() )->isValid( $input );
 		$this->assertFalse( $isValid );
 	}
 }

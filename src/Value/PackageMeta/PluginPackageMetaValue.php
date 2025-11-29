@@ -13,7 +13,7 @@ namespace CodeKaizen\WPPackageMetaProviderLocal\Value\PackageMeta;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Value\PackageMeta\PluginPackageMetaValueContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
 use Respect\Validation\Validator;
-use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\PluginHeadersArrayRule;
+use CodeKaizen\WPPackageMetaProviderLocal\Validator\Rule\PackageMeta\Plugin\ArrayPluginPackageMetaRule;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
@@ -64,7 +64,7 @@ class PluginPackageMetaValue implements PluginPackageMetaValueContract {
 	) {
 		$this->logger = $logger;
 		try {
-			Validator::create( new PluginHeadersArrayRule() )->check( $packageMeta );
+			Validator::create( new ArrayPluginPackageMetaRule() )->check( $packageMeta );
 		} catch ( Throwable $e ) {
 			$this->logger->error(
 				'Failed to validate plugin metadata.',
