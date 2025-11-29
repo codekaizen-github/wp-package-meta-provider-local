@@ -2,10 +2,10 @@
 /**
  * Response Package Meta Array Assembler Test
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Assembler\Array\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Assembler\String\MixedArray
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Assembler\Array\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Assembler\String\MixedArray;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Parser\String\StringMapStringParserContract;

@@ -4,11 +4,11 @@
  *
  * Tests for parsing and extracting package metadata headers from plugin and theme files.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Parser
  * @since 1.0.0
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Accessor;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Parser;
 
 use CodeKaizen\WPPackageMetaProviderLocal\Parser\HeadersParser;
 use CodeKaizen\WPPackageMetaProviderLocal\Reader\FileReader;

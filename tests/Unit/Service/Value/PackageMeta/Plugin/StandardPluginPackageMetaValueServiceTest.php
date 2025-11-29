@@ -2,10 +2,10 @@
 /**
  * Test.
  *
- * @package CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Service\Value\PackageMeta
+ * @package CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Service\Value\PackageMeta\Plugin
  */
 
-namespace CodeKaizen\WPPackageMetaProviderLocal\Tests\Unit\Service\Value\PackageMeta;
+namespace CodeKaizen\WPPackageMetaProviderLocalTests\Unit\Service\Value\PackageMeta\Plugin;
 
 // phpcs:disable Generic.Files.LineLength -- Keep import on one line.
 use CodeKaizen\WPPackageMetaProviderLocal\Service\Value\PackageMeta\Plugin\StandardPluginPackageMetaValueService;
