@@ -7,6 +7,8 @@
 
 namespace CodeKaizen\WPPackageMetaProviderLocal\Factory\Service\Value\PackageMeta\Theme;
 
+// phpcs:ignore Generic.Files.LineLength.TooLong
+use CodeKaizen\WPPackageMetaProviderContract\Contract\Factory\Service\Value\PackageMeta\ThemePackageMetaValueServiceFactoryContract;
 use CodeKaizen\WPPackageMetaProviderContract\Contract\Service\Value\PackageMeta\ThemePackageMetaValueServiceContract;
 use CodeKaizen\WPPackageMetaProviderLocal\Assembler\String\MixedArray\PackageMetaMixedArrayStringAssembler;
 use CodeKaizen\WPPackageMetaProviderLocal\Contract\Value\SlugValueContract;
@@ -19,7 +21,7 @@ use Psr\Log\NullLogger;
 /**
  * Undocumented class
  */
-class StandardThemePackageMetaValueServiceFactory {
+class StandardThemePackageMetaValueServiceFactory implements ThemePackageMetaValueServiceFactoryContract {
 	/**
 	 * URL to meta endpoint.
 	 *
